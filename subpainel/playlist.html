@@ -22,7 +22,7 @@
         </div>
 
         <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
-        <button class="delete-page is-hidden" id="deletePageButton" type="button">Excluir página</button>
+        <button class="header-return is-hidden" id="folderHeaderBackButton" type="button">← Voltar</button>
       </header>
 
       <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro">
@@ -141,17 +141,12 @@
 
       <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
         <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
-          <div class="detail-card-head">
-            <button class="back-to-folders" id="backToFolders" type="button">← Voltar</button>
-          </div>
-
           <div class="detail-layout">
             <div class="detail-info">
               <div class="detail-topline">
                 <span class="eyebrow">pagina aberta</span>
                 <button class="copy-code detail-code" id="detailCode" type="button" data-code="H4D3">H4D3</button>
               </div>
-
               <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
 
               <dl class="detail-metrics">
@@ -163,10 +158,19 @@
                   <dt>Veiculos vinculados</dt>
                   <dd id="detailVehicles">38</dd>
                 </div>
+                <div>
+                  <dt>Campanhas ativas</dt>
+                  <dd id="detailCampaigns">12</dd>
+                </div>
+                <div>
+                  <dt>Quiz interacao</dt>
+                  <dd id="detailQuizzes">1.248</dd>
+                </div>
               </dl>
 
               <div class="detail-actions">
                 <button type="button">Editar informacoes</button>
+                <button class="danger-action" type="button">Excluir pagina</button>
               </div>
             </div>
 
