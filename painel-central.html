@@ -4,30 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>painel-central | drivvio mobilidade</title>
-
-    <link rel="stylesheet" href="./painel-central.css" />
-    <script src="./painel-central.js" defer></script>
+    <link rel="stylesheet" href="painel-central.css" />
+    <script src="painel-central.js" defer></script>
   </head>
-
   <body>
     <main class="system-shell">
       <aside class="sidebar" aria-label="Menu principal">
         <div class="brand-lockup">
-          <img class="brand-logo" src="./logo.png" alt="drivvio" />
+          <img class="brand-logo" src="logo.png" alt="drivvio" />
           <small>mobilidade urbana</small>
         </div>
 
         <nav class="side-nav">
-          <button class="active" type="button"><span>⌂</span>Dashboard</button>
-          <button type="button"><span>✈</span>Campanhas</button>
-          <button type="button"><span>▣</span>Anuncios</button>
-          <button type="button"><span>≋</span>Playlists</button>
-          <button type="button"><span>◫</span>Agendamentos</button>
-          <button type="button"><span>▱</span>Veiculos</button>
-          <button type="button"><span>▯</span>Tablets</button>
-          <button type="button"><span>⌁</span>Relatorios</button>
-          <button type="button"><span>◌</span>Analytics</button>
-          <button type="button"><span>⚙</span>Configuracoes</button>
+          <button class="active" type="button"><span class="nav-icon">⌂</span>Dashboard</button>
+          <button type="button"><span class="nav-icon">↗</span>Campanhas</button>
+          <button type="button"><span class="nav-icon">▣</span>Anuncios</button>
+          <button type="button"><span class="nav-icon">≋</span>Playlists</button>
+          <button type="button"><span class="nav-icon">◫</span>Agendamentos</button>
+          <button type="button"><span class="nav-icon">▰</span>Veiculos</button>
+          <button type="button"><span class="nav-icon">▯</span>Tablets</button>
+          <button type="button"><span class="nav-icon">⌁</span>Relatorios</button>
+          <button type="button"><span class="nav-icon">◌</span>Analytics</button>
+          <button type="button"><span class="nav-icon">⚙</span>Configuracoes</button>
         </nav>
 
         <button class="new-ad-button" type="button">Novo anuncio</button>
@@ -43,17 +41,14 @@
 
           <div class="topbar-widgets">
             <div class="online-dot">Sistema Online</div>
-
             <div class="mini-widget">
               <strong>24°C</strong>
               <span>Parcialmente nublado</span>
             </div>
-
             <div class="mini-widget">
               <strong id="todayDate">30/04/2026</strong>
               <span>Operacao ativa</span>
             </div>
-
             <div class="mini-widget">
               <strong id="clock">22:30</strong>
               <span>Administrador</span>
@@ -115,21 +110,20 @@
                 <h2>Reproducao ao vivo</h2>
                 <p>Acompanhe o que esta sendo exibido nos tablets</p>
               </div>
-
               <span class="live-badge">Ao vivo</span>
             </div>
 
             <div class="live-layout">
               <div class="city-map" aria-label="Mapa de veiculos em operacao">
+                <img class="map-image" src="mapa-salvador.png" alt="Mapa de Salvador" />
                 <span class="route route-one"></span>
                 <span class="route route-two"></span>
-
-                <button class="car-point active" style="--x: 18%; --y: 62%">▱</button>
-                <button class="car-point" style="--x: 32%; --y: 48%">▱</button>
-                <button class="car-point" style="--x: 46%; --y: 70%">▱</button>
-                <button class="car-point" style="--x: 60%; --y: 39%">▱</button>
-                <button class="car-point" style="--x: 76%; --y: 57%">▱</button>
-                <button class="car-point" style="--x: 86%; --y: 31%">▱</button>
+                <button class="car-point active" style="--x: 22%; --y: 70%">▰</button>
+                <button class="car-point" style="--x: 35%; --y: 52%">▰</button>
+                <button class="car-point" style="--x: 49%; --y: 72%">▰</button>
+                <button class="car-point" style="--x: 58%; --y: 45%">▰</button>
+                <button class="car-point" style="--x: 75%; --y: 56%">▰</button>
+                <button class="car-point" style="--x: 82%; --y: 28%">▰</button>
               </div>
 
               <aside class="tablet-preview">
@@ -138,26 +132,12 @@
                   <strong>2 por 1</strong>
                   <small>Campanha em exibicao</small>
                 </div>
-
                 <dl>
-                  <div>
-                    <dt>Veiculo</dt>
-                    <dd>ABC-1234</dd>
-                  </div>
-                  <div>
-                    <dt>Linha</dt>
-                    <dd>Barra / Aeroporto</dd>
-                  </div>
-                  <div>
-                    <dt>Motorista</dt>
-                    <dd>Joao Silva</dd>
-                  </div>
-                  <div>
-                    <dt>Tablet</dt>
-                    <dd>DRV-TAB-08</dd>
-                  </div>
+                  <div><dt>Veiculo</dt><dd>ABC-1234</dd></div>
+                  <div><dt>Linha</dt><dd>Barra / Aeroporto</dd></div>
+                  <div><dt>Motorista</dt><dd>Joao Silva</dd></div>
+                  <div><dt>Tablet</dt><dd>DRV-TAB-08</dd></div>
                 </dl>
-
                 <div class="countdown"><span></span></div>
               </aside>
             </div>
@@ -167,14 +147,12 @@
             <div class="panel-head">
               <h2>Status do sistema</h2>
             </div>
-
             <ul class="status-list">
               <li><span>Wi</span>Conexao com tablets <strong>Online</strong></li>
               <li><span>Md</span>Servidor de midia <strong>Online</strong></li>
               <li><span>Sy</span>Sincronizacao <strong>Sincronizado</strong></li>
               <li><span>Ar</span>Armazenamento <strong>78% disponivel</strong></li>
             </ul>
-
             <div class="storage-bar"><span></span></div>
           </aside>
 
@@ -196,7 +174,48 @@
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody id="campaignRows"></tbody>
+                <tbody id="campaignRows">
+                  <tr>
+                    <td><span class="brand-dot burger"></span>Burger King - 2 por 1</td>
+                    <td>15 anuncios</td>
+                    <td>320 veiculos</td>
+                    <td>32.450</td>
+                    <td>2,45%</td>
+                    <td><mark>Ativa</mark></td>
+                  </tr>
+                  <tr>
+                    <td><span class="brand-dot coke"></span>Coca-Cola - Refresque-se</td>
+                    <td>8 anuncios</td>
+                    <td>280 veiculos</td>
+                    <td>28.760</td>
+                    <td>2,12%</td>
+                    <td><mark>Ativa</mark></td>
+                  </tr>
+                  <tr>
+                    <td><span class="brand-dot mcd"></span>McDonald's - McOferta</td>
+                    <td>12 anuncios</td>
+                    <td>300 veiculos</td>
+                    <td>24.180</td>
+                    <td>1,98%</td>
+                    <td><mark>Ativa</mark></td>
+                  </tr>
+                  <tr>
+                    <td><span class="brand-dot netflix"></span>Netflix - Assine agora</td>
+                    <td>6 anuncios</td>
+                    <td>250 veiculos</td>
+                    <td>18.320</td>
+                    <td>1,75%</td>
+                    <td><mark>Ativa</mark></td>
+                  </tr>
+                  <tr>
+                    <td><span class="brand-dot ifood"></span>iFood - Peca ja</td>
+                    <td>10 anuncios</td>
+                    <td>200 veiculos</td>
+                    <td>12.740</td>
+                    <td>1,45%</td>
+                    <td><mark>Ativa</mark></td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </section>
@@ -221,20 +240,9 @@
             </div>
 
             <div class="performance-stats">
-              <div>
-                <span>Impressoes</span>
-                <strong>128.450</strong>
-              </div>
-
-              <div>
-                <span>Cliques</span>
-                <strong>2.847</strong>
-              </div>
-
-              <div>
-                <span>CTR</span>
-                <strong>2,21%</strong>
-              </div>
+              <div><span>Impressoes</span><strong>128.450</strong></div>
+              <div><span>Cliques</span><strong>2.847</strong></div>
+              <div><span>CTR</span><strong>2,21%</strong></div>
             </div>
           </aside>
 
@@ -244,7 +252,40 @@
               <button type="button">Ver todos</button>
             </div>
 
-            <div class="schedule-list" id="scheduleRows"></div>
+            <div class="schedule-list" id="scheduleRows">
+              <article>
+                <div class="schedule-thumb burger"></div>
+                <div>
+                  <strong>11:00</strong>
+                  <span>Campanha Almoco</span>
+                  <small>Inicio programado · 120 veiculos</small>
+                </div>
+              </article>
+              <article>
+                <div class="schedule-thumb coke"></div>
+                <div>
+                  <strong>14:00</strong>
+                  <span>Campanha Tarde</span>
+                  <small>Inicio programado · 150 veiculos</small>
+                </div>
+              </article>
+              <article>
+                <div class="schedule-thumb mcd"></div>
+                <div>
+                  <strong>18:00</strong>
+                  <span>Happy Hour</span>
+                  <small>Inicio programado · 180 veiculos</small>
+                </div>
+              </article>
+              <article>
+                <div class="schedule-thumb netflix"></div>
+                <div>
+                  <strong>20:00</strong>
+                  <span>Campanha Noite</span>
+                  <small>Inicio programado · 200 veiculos</small>
+                </div>
+              </article>
+            </div>
           </section>
 
           <aside class="panel ranking-panel">
@@ -253,11 +294,15 @@
               <button type="button">Hoje</button>
             </div>
 
-            <ol id="rankingRows"></ol>
+            <ol id="rankingRows">
+              <li><span>1. Burger King - 2 por 1</span><strong>32.450</strong></li>
+              <li><span>2. Coca-Cola - Refresque-se</span><strong>28.760</strong></li>
+              <li><span>3. McDonald's - McOferta</span><strong>24.180</strong></li>
+              <li><span>4. Netflix - Assine agora</span><strong>18.320</strong></li>
+              <li><span>5. iFood - Peca ja</span><strong>12.740</strong></li>
+            </ol>
 
-            <footer>
-              Ultima atualizacao: <span id="lastUpdate">--:--:--</span>
-            </footer>
+            <footer>Ultima atualizacao: <span id="lastUpdate">22:44:35</span></footer>
           </aside>
         </section>
       </section>
