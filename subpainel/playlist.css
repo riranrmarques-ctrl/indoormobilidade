@@ -60,6 +60,27 @@ a {
   align-items: center;
 }
 
+.playlist-header.is-folder-context {
+  grid-template-columns: 1fr auto;
+  min-height: 112px;
+}
+
+.playlist-header.is-folder-context .header-title {
+  justify-content: flex-start;
+}
+
+.playlist-header.is-folder-context .brand-logo {
+  width: 150px;
+}
+
+.playlist-header.is-folder-context h1 {
+  white-space: nowrap;
+}
+
+.playlist-header.is-folder-context .header-title p {
+  max-width: 680px;
+}
+
 .back-button {
   min-height: 44px;
   padding: 0 14px;
@@ -76,7 +97,7 @@ a {
 .header-title {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 26px;
 }
 
 .brand-logo {
@@ -335,29 +356,40 @@ dd {
 }
 
 .opened-folder-status {
+  position: fixed;
+  right: max(24px, calc((100vw - 1480px) / 2 + 24px));
+  bottom: 24px;
+  z-index: 40;
+  min-height: 52px;
+  padding: 8px 10px 8px 16px;
+  border: 1px solid rgba(0, 224, 135, 0.3);
+  border-radius: var(--radius);
   display: flex;
   align-items: center;
   gap: 10px;
+  background: rgba(12, 27, 42, 0.94);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.42), 0 0 28px rgba(0, 224, 135, 0.12);
+  backdrop-filter: blur(16px);
   color: var(--green);
   font-weight: 900;
 }
 
-.opened-folder-status strong {
-  padding: 7px 10px;
-  border: 1px solid rgba(0, 224, 135, 0.28);
-  border-radius: 999px;
-  background: rgba(0, 224, 135, 0.11);
+.floating-code {
+  min-width: 68px;
+  min-height: 36px;
+  font-size: 0.98rem;
 }
 
 .folder-detail {
   padding: 26px;
-  display: grid;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
 .detail-card-head {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 16px;
   align-items: center;
 }
@@ -369,13 +401,13 @@ dd {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: minmax(420px, 0.92fr) 1fr;
+  grid-template-columns: minmax(420px, 0.95fr) 1fr;
   gap: 30px;
   align-items: center;
 }
 
 .detail-media {
-  height: 330px;
+  height: 300px;
   overflow: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--line);
@@ -391,8 +423,8 @@ dd {
 
 .detail-info h2 {
   margin: 8px 0 10px;
-  font-size: clamp(2.4rem, 5vw, 5rem);
-  line-height: 0.95;
+  font-size: clamp(2rem, 3.4vw, 3.8rem);
+  line-height: 1;
   letter-spacing: 0;
 }
 
@@ -477,6 +509,14 @@ dd {
     grid-template-columns: 1fr;
   }
 
+  .playlist-header.is-folder-context {
+    grid-template-columns: 1fr;
+  }
+
+  .playlist-header.is-folder-context h1 {
+    white-space: normal;
+  }
+
   .folder-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -503,6 +543,12 @@ dd {
 
   .detail-media {
     height: 260px;
+  }
+
+  .opened-folder-status {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
   }
 
   .file-row {
