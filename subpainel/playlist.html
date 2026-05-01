@@ -1,235 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>playlist | drivvio</title>
-    <link rel="stylesheet" href="playlist.css" />
-    <script src="playlist.js" defer></script>
-  </head>
-  <body>
-    <main class="playlist-shell">
-      <header class="playlist-header" id="playlistHeader">
-        <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>playlist | drivvio</title>
 
-        <div class="header-title">
-          <img class="brand-logo" src="../logo.png" onerror="this.onerror=null; this.src='logo.png';" alt="drivvio" />
+  <link rel="stylesheet" href="playlist.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="playlist.js" defer></script>
+</head>
+
+<body>
+  <main class="playlist-shell">
+    <header class="playlist-header" id="playlistHeader">
+      <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
+
+      <div class="header-title">
+        <img class="brand-logo" src="../logo.png" onerror="this.onerror=null; this.src='logo.png';" alt="drivvio" />
+        <div>
+          <span class="eyebrow">Gestao da playlists</span>
+          <h1>Veiculos Indoor</h1>
+          <p>Gerencie as playlist e informacoes por bairro.</p>
+        </div>
+      </div>
+
+      <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
+      <button class="header-return is-hidden" id="folderHeaderBackButton" type="button">← Voltar</button>
+    </header>
+
+    <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro"></section>
+
+    <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
+      <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
+        <div class="detail-layout">
+          <div class="detail-info">
+            <div class="detail-topline">
+              <span class="eyebrow">pagina aberta</span>
+              <button class="copy-code detail-code" id="detailCode" type="button" data-code="">----</button>
+            </div>
+
+            <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
+
+            <dl class="detail-metrics">
+              <div>
+                <dt>Zona de Area</dt>
+                <dd id="detailDistrict">0 km2</dd>
+              </div>
+              <div>
+                <dt>Veiculos vinculados</dt>
+                <dd id="detailVehicles">0</dd>
+              </div>
+              <div>
+                <dt>Campanhas ativas</dt>
+                <dd id="detailCampaigns">0</dd>
+              </div>
+              <div>
+                <dt>Quiz interacao</dt>
+                <dd id="detailQuizzes">0</dd>
+              </div>
+            </dl>
+
+            <div class="detail-actions">
+              <button id="editVehicleButton" type="button">Editar</button>
+              <button id="deleteVehicleButton" class="danger-action" type="button">Excluir</button>
+            </div>
+          </div>
+
+          <div class="detail-media-panel">
+            <div class="detail-media">
+              <img id="detailMapImage" src="mapa-salvador.png" alt="Mapa de Salvador" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="playlist-table" aria-label="Playlist ativa">
+        <div class="section-head">
           <div>
-            <span class="eyebrow">Gestao da playlists</span>
-            <h1>Veiculos Indoor</h1>
-            <p>Gerencie as playlist e informacoes por bairro.</p>
+            <span class="eyebrow">conteudo da</span>
+            <h2>Playlists</h2>
           </div>
+
+          <button id="addMediaButton" type="button">Adicionar midia</button>
         </div>
 
-        <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
-        <button class="header-return is-hidden" id="folderHeaderBackButton" type="button">← Voltar</button>
-      </header>
-
-      <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro">
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="H4D3">H4D3</button>
-          </div>
-          <div class="folder-cover salvador"></div>
-          <h2>Barra</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>38</strong></span>
-            <span><small>Zona</small><strong>7,4 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Barra">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="J3J2">J3J2</button>
-          </div>
-          <div class="folder-cover pituba"></div>
-          <h2>Pituba</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>42</strong></span>
-            <span><small>Zona</small><strong>10,8 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Pituba">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="J1N3">J1N3</button>
-          </div>
-          <div class="folder-cover rio-vermelho"></div>
-          <h2>Rio Vermelho</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>24</strong></span>
-            <span><small>Zona</small><strong>5,1 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Rio Vermelho">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot inactive"></span><strong>Inativo</strong></span>
-            <button class="copy-code" type="button" data-code="M3D8">M3D8</button>
-          </div>
-          <div class="folder-cover itapua"></div>
-          <h2>Itapua</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>16</strong></span>
-            <span><small>Zona</small><strong>12,6 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Itapua">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="A7B2">A7B2</button>
-          </div>
-          <div class="folder-cover ondina"></div>
-          <h2>Ondina</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>28</strong></span>
-            <span><small>Zona</small><strong>4,9 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Ondina">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="C8L5">C8L5</button>
-          </div>
-          <div class="folder-cover imbui"></div>
-          <h2>Imbui</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>31</strong></span>
-            <span><small>Zona</small><strong>9,2 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Imbui">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
-            <button class="copy-code" type="button" data-code="P9K4">P9K4</button>
-          </div>
-          <div class="folder-cover caminho"></div>
-          <h2>Caminho das Arvores</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>35</strong></span>
-            <span><small>Zona</small><strong>6,3 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Caminho das Arvores">Abrir pagina</button>
-        </article>
-
-        <article class="folder-card">
-          <div class="status-line">
-            <span><span class="status-dot inactive"></span><strong>Inativo</strong></span>
-            <button class="copy-code" type="button" data-code="S2V6">S2V6</button>
-          </div>
-          <div class="folder-cover comercio"></div>
-          <h2>Comercio</h2>
-          <div class="folder-stats">
-            <span><small>Veiculos</small><strong>12</strong></span>
-            <span><small>Zona</small><strong>3,8 km2</strong></span>
-          </div>
-          <button class="open-folder" type="button" data-folder="Comercio">Abrir pagina</button>
-        </article>
+        <div id="playlistList"></div>
       </section>
 
-      <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
-        <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
-          <div class="detail-layout">
-            <div class="detail-info">
-              <div class="detail-topline">
-                <span class="eyebrow">pagina aberta</span>
-                <button class="copy-code detail-code" id="detailCode" type="button" data-code="H4D3">H4D3</button>
-              </div>
-
-              <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
-
-              <dl class="detail-metrics">
-                <div>
-                  <dt>Zona de Area</dt>
-                  <dd id="detailDistrict">7,4 km2</dd>
-                </div>
-                <div>
-                  <dt>Veiculos vinculados</dt>
-                  <dd id="detailVehicles">38</dd>
-                </div>
-                <div>
-                  <dt>Campanhas ativas</dt>
-                  <dd id="detailCampaigns">12</dd>
-                </div>
-                <div>
-                  <dt>Quiz interacao</dt>
-                  <dd id="detailQuizzes">1.248</dd>
-                </div>
-              </dl>
-
-              <div class="detail-actions">
-                <button type="button">Editar</button>
-                <button class="danger-action" type="button">Excluir</button>
-              </div>
-            </div>
-
-            <div class="detail-media-panel">
-              <div class="detail-media">
-                <img src="mapa-salvador.png" alt="Mapa de Salvador" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="playlist-table" aria-label="Playlist ativa">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow">conteudo da</span>
-              <h2>Playlists</h2>
-            </div>
-            <button type="button">Adicionar midia</button>
-          </div>
-
-          <div class="file-row">
-            <span class="drag-handle">⋮⋮</span>
-            <strong>1.</strong>
-            <p>ABERTURA_BAIRRO_DA_CIDADE.mp4</p>
-            <div class="file-actions">
-              <button type="button">↗</button>
-              <button type="button">✎</button>
-              <button type="button">⌫</button>
-            </div>
-          </div>
-
-          <div class="file-row">
-            <span class="drag-handle">⋮⋮</span>
-            <strong>2.</strong>
-            <p>PROMOCAO_LOCAL_15S.mp4</p>
-            <div class="file-actions">
-              <button type="button">↗</button>
-              <button type="button">✎</button>
-              <button type="button">⌫</button>
-            </div>
-          </div>
-
-          <div class="file-row">
-            <span class="drag-handle">⋮⋮</span>
-            <strong>3.</strong>
-            <p>QUIZ_INTERATIVO_PASSAGEIRO.mp4</p>
-            <div class="file-actions">
-              <button type="button">↗</button>
-              <button type="button">✎</button>
-              <button type="button">⌫</button>
-            </div>
-          </div>
-        </section>
-
-        <div class="opened-folder-status" aria-label="Pasta aberta">
-          <span id="openedFolderLabel">Pasta aberta: Barra</span>
-        </div>
-      </section>
-    </main>
-  </body>
+      <div class="opened-folder-status" aria-label="Pasta aberta">
+        <span id="openedFolderLabel">Pasta aberta:</span>
+      </div>
+    </section>
+  </main>
+</body>
 </html>
