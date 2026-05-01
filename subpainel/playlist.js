@@ -86,8 +86,8 @@ async function carregarVeiculos() {
     .order("nome", { ascending: true });
 
   if (error) {
-    console.error("Erro ao carregar veÃ­culos:", error);
-    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veÃ­culos.</p>`;
+    console.error("Erro ao carregar veiculos:", error);
+    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veiculos.</p>`;
     return;
   }
 
@@ -137,7 +137,7 @@ function renderizarPastas() {
 
       <div class="folder-stats">
         <span>
-          <small>VeÃ­culos</small>
+          <small>Veiculos</small>
           <strong>${item.veiculos_vinculados || 0}</strong>
         </span>
 
@@ -148,7 +148,7 @@ function renderizarPastas() {
       </div>
 
       <button class="open-folder" type="button" data-code="${item.codigo || ""}">
-        Abrir pÃ¡gina
+        Abrir pagina
       </button>
     `;
 
@@ -231,7 +231,7 @@ async function carregarPlaylist(codigo) {
   }
 
   if (!data || !data.length) {
-    playlistList.innerHTML = `<p class="playlist-empty">Nenhuma mÃ­dia adicionada ainda.</p>`;
+    playlistList.innerHTML = `<p class="playlist-empty">Nenhuma midia adicionada ainda.</p>`;
     return;
   }
 
@@ -242,21 +242,21 @@ async function carregarPlaylist(codigo) {
     row.className = "file-row";
 
     row.innerHTML = `
-      <span class="drag-handle">â‹®â‹®</span>
+      <span class="drag-handle">::</span>
 
       <strong>${index + 1}.</strong>
 
       <p>
-        ${item.nome_arquivo || item.nome || item.link_url || "MÃ­dia sem nome"}
+        ${item.nome_arquivo || item.nome || item.arquivo_url || item.video_url || "Midia sem nome"}
         <small>
           ${item.tipo || "video"}
         </small>
       </p>
 
       <div class="file-actions">
-        <button type="button" data-action="abrir" data-id="${item.id}">â†—</button>
-        <button type="button" data-action="editar" data-id="${item.id}">âœŽ</button>
-        <button type="button" data-action="excluir" data-id="${item.id}">âŒ«</button>
+        <button type="button" data-action="abrir" data-id="${item.id}">Abrir</button>
+        <button type="button" data-action="editar" data-id="${item.id}">Editar</button>
+        <button type="button" data-action="excluir" data-id="${item.id}">Excluir</button>
       </div>
     `;
 
@@ -278,7 +278,7 @@ async function criarPasta() {
   const nome = prompt("Nome da nova pasta:");
   if (!nome) return;
 
-  const zona = prompt("Zona / Ã¡rea em km2:");
+  const zona = prompt("Zona / area em km2:");
   const codigo = gerarCodigoPasta();
 
   const { error } = await supabaseClient
@@ -396,13 +396,12 @@ async function salvarNovaMidia() {
   const nome = mediaNome.value.trim();
 
   if (!nome) {
-    alert("Digite o nome da mÃ­dia.");
+    alert("Digite o nome da midia.");
     return;
   }
 
   let arquivo_url = null;
   let storage_path = null;
-  let link_url = null;
   let nome_arquivo = nome;
 
   if (tipoLimpo === "video" || tipoLimpo === "imagem") {
@@ -441,12 +440,14 @@ async function salvarNovaMidia() {
   }
 
   if (tipoLimpo === "noticia" || tipoLimpo === "quiz") {
-    link_url = mediaLink.value.trim();
+    arquivo_url = mediaLink.value.trim();
 
-    if (!link_url) {
+    if (!arquivo_url) {
       alert("Cole a URL.");
       return;
     }
+
+    nome_arquivo = nome;
   }
 
   const { data: ultima } = await supabaseClient
@@ -468,17 +469,15 @@ async function salvarNovaMidia() {
       arquivo_url,
       video_url: tipoLimpo === "video" ? arquivo_url : null,
       storage_path,
-      link_url,
       ordem,
       ativo: true,
-      duracao: tipoLimpo === "video" ? null : 10,
       criado_em: new Date().toISOString(),
       atualizado_em: new Date().toISOString(),
     });
 
   if (error) {
-    console.error("Erro ao salvar mÃ­dia:", error);
-    alert("Erro ao salvar mÃ­dia no banco.");
+    console.error("Erro ao salvar midia:", error);
+    alert("Erro ao salvar midia no banco.");
     return;
   }
 
@@ -628,8 +627,8 @@ async function salvarEdicaoPasta() {
   }
 
   if (error) {
-    console.error("Erro ao salvar ediÃ§Ã£o:", error);
-    alert("Erro ao salvar ediÃ§Ã£o.");
+    console.error("Erro ao salvar edicao:", error);
+    alert("Erro ao salvar edicao.");
     return;
   }
 
@@ -693,14 +692,14 @@ async function abrirMidia(id) {
     .single();
 
   if (error || !data) {
-    alert("Erro ao abrir mÃ­dia.");
+    alert("Erro ao abrir midia.");
     return;
   }
 
-  const url = data.arquivo_url || data.video_url || data.link_url;
+  const url = data.arquivo_url || data.video_url;
 
   if (!url) {
-    alert("Esta mÃ­dia ainda nÃ£o tem URL.");
+    alert("Esta midia ainda nao tem URL.");
     return;
   }
 
@@ -708,7 +707,7 @@ async function abrirMidia(id) {
 }
 
 async function editarMidia(id) {
-  const novoNome = prompt("Novo nome da mÃ­dia:");
+  const novoNome = prompt("Novo nome da midia:");
   if (!novoNome) return;
 
   const { error } = await supabaseClient
@@ -721,8 +720,8 @@ async function editarMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao editar mÃ­dia:", error);
-    alert("Erro ao editar mÃ­dia.");
+    console.error("Erro ao editar midia:", error);
+    alert("Erro ao editar midia.");
     return;
   }
 
@@ -732,7 +731,7 @@ async function editarMidia(id) {
 }
 
 async function excluirMidia(id) {
-  const confirmar = confirm("Deseja excluir esta mÃ­dia?");
+  const confirmar = confirm("Deseja excluir esta midia?");
   if (!confirmar) return;
 
   const { data: midia } = await supabaseClient
@@ -753,8 +752,8 @@ async function excluirMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao excluir mÃ­dia:", error);
-    alert("Erro ao excluir mÃ­dia.");
+    console.error("Erro ao excluir midia:", error);
+    alert("Erro ao excluir midia.");
     return;
   }
 
@@ -773,7 +772,7 @@ function closeFolderPage() {
   folderHeaderBackButton.classList.add("is-hidden");
   playlistHeader.classList.remove("is-folder-context");
 
-  openedFolderLabel.textContent = "Gerencie as pastas e campanhas dos veÃ­culos.";
+  openedFolderLabel.textContent = "Gerencie as pastas e campanhas dos veiculos.";
 }
 
 function limparNomeArquivo(nome) {
