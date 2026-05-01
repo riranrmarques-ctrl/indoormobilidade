@@ -1,130 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Desconto Agora</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(180deg, #040816, #0a1f4d);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.container {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.sub {
-  opacity: 0.7;
-  margin-bottom: 30px;
-}
-
-.btn {
-  width: 100%;
-  padding: 16px;
-  margin: 10px 0;
-  border-radius: 14px;
-  border: none;
-  font-size: 16px;
-  background: rgba(255,255,255,0.08);
-  color: white;
-  backdrop-filter: blur(10px);
-  transition: 0.2s;
-}
-
-.btn:hover {
-  transform: scale(1.03);
-  background: #1c3cff;
-}
-
-.card {
-  background: rgba(255,255,255,0.05);
-  padding: 25px;
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-}
-
-#resultado {
-  display: none;
-}
-
-.cta {
-  background: #1c3cff;
-  font-weight: bold;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <!-- QUIZ 1 -->
-  <div id="quiz1" class="card">
-    <h1>💰 Bora economizar hoje?</h1>
-    <p class="sub">Responda rápido e desbloqueie seu desconto</p>
-
-    <button class="btn" onclick="next('mes')">🛒 Compras do mês</button>
-    <button class="btn" onclick="next('carnes')">🍖 Só carnes</button>
-    <button class="btn" onclick="next('casa')">🧼 Repor a casa</button>
-    <button class="btn" onclick="next('bebidas')">🍺 Bebidas e lazer</button>
-  </div>
-
-  <!-- QUIZ 2 -->
-  <div id="quiz2" class="card" style="display:none;">
-    <h1>🔥 O que você quer agora?</h1>
-    <p class="sub">Escolha e veja sua vantagem</p>
-
-    <button class="btn" onclick="finalizar()">💸 Pagar mais barato</button>
-    <button class="btn" onclick="finalizar()">🎁 Ver ofertas ocultas</button>
-  </div>
-
-  <!-- RESULTADO -->
-  <div id="resultado" class="card">
-    <h1>🎉 Desconto liberado!</h1>
-    <p class="sub">Acesse agora e aproveite</p>
-
-    <a id="linkFinal" href="#" target="_blank">
-      <button class="btn cta">Acessar agora</button>
-    </a>
-  </div>
-
-</div>
-
 <script>
-let escolha = "";
-
-function next(valor) {
-  escolha = valor;
-  document.getElementById("quiz1").style.display = "none";
-  document.getElementById("quiz2").style.display = "block";
-}
-
 function finalizar() {
   document.getElementById("quiz2").style.display = "none";
   document.getElementById("resultado").style.display = "block";
 
-  // link final (troque aqui)
   let link = "https://www.atakarejo.com.br/";
-
   document.getElementById("linkFinal").href = link;
+
+  // volta sozinho depois de 20s
+  setTimeout(() => {
+    location.reload();
+  }, 20000);
 }
 </script>
-
-</body>
-</html>
