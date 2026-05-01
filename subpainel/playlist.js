@@ -27,6 +27,13 @@ const addMediaButton = document.querySelector("#addMediaButton");
 const editVehicleButton = document.querySelector("#editVehicleButton");
 const deleteVehicleButton = document.querySelector("#deleteVehicleButton");
 
+const editModal = document.querySelector("#editModal");
+const editNome = document.querySelector("#editNome");
+const editZona = document.querySelector("#editZona");
+const editImagem = document.querySelector("#editImagem");
+const cancelEdit = document.querySelector("#cancelEdit");
+const saveEdit = document.querySelector("#saveEdit");
+
 document.addEventListener("DOMContentLoaded", iniciarPagina);
 
 async function iniciarPagina() {
@@ -37,6 +44,9 @@ async function iniciarPagina() {
   editVehicleButton?.addEventListener("click", editarPasta);
   deleteVehicleButton?.addEventListener("click", excluirPasta);
   detailCode?.addEventListener("click", () => copyCode(detailCode));
+
+  cancelEdit?.addEventListener("click", fecharModalEdicao);
+  saveEdit?.addEventListener("click", salvarEdicaoPasta);
 }
 
 async function carregarVeiculos() {
@@ -306,69 +316,83 @@ async function adicionarMidia() {
   await carregarPlaylist(pastaAberta.codigo);
 }
 
-async function editarPasta() {
+function editarPasta() {
   if (!pastaAberta) return;
 
-  const novoNome = prompt("Nome da pasta:", pastaAberta.nome || "");
-  if (!novoNome) return;
+  editNome.value = pastaAberta.nome || "";
+  editZona.value = pastaAberta.zona_area || "";
+  editImagem.value = "";
 
-  const novaZona = prompt("Tamanho da área em km²:", pastaAberta.zona_area || "");
-  if (!novaZona) return;
+  editModal.classList.remove("is-hidden");
+}
+
+function fecharModalEdicao() {
+  editModal.classList.add("is-hidden");
+}
+
+async function salvarEdicaoPasta() {
+  if (!pastaAberta) return;
+
+  const novoNome = editNome.value.trim();
+  const novaZona = converterNumero(editZona.value);
+
+  if (!novoNome) {
+    alert("Digite o nome da pasta.");
+    return;
+  }
 
   let imagem_url = pastaAberta.imagem_url || null;
   let imagem_path = pastaAberta.imagem_path || null;
 
-  const trocarImagem = confirm("Deseja trocar a imagem/mapa desta pasta?");
+  const file = editImagem.files[0];
 
-  if (trocarImagem) {
-    const file = await escolherArquivo("imagem");
+  if (file) {
+    const extensao = file.name.split(".").pop();
+    const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
 
-    if (file) {
-      const extensao = file.name.split(".").pop();
-      const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
+    const { error: uploadError } = await supabaseClient.storage
+      .from("playlist-media")
+      .upload(caminho, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
 
-      const { error: uploadError } = await supabaseClient.storage
-        .from("playlist-media")
-        .upload(caminho, file, {
-          cacheControl: "3600",
-          upsert: true,
-        });
-
-      if (uploadError) {
-        console.error("Erro ao enviar imagem:", uploadError);
-        alert("Erro ao enviar imagem.");
-        return;
-      }
-
-      const { data: publicData } = supabaseClient.storage
-        .from("playlist-media")
-        .getPublicUrl(caminho);
-
-      imagem_url = publicData.publicUrl;
-      imagem_path = caminho;
+    if (uploadError) {
+      console.error("Erro ao enviar imagem:", uploadError);
+      alert("Erro ao enviar imagem.");
+      return;
     }
+
+    const { data: publicData } = supabaseClient.storage
+      .from("playlist-media")
+      .getPublicUrl(caminho);
+
+    imagem_url = publicData.publicUrl;
+    imagem_path = caminho;
   }
+
+  const codigoAtual = pastaAberta.codigo;
 
   const { error } = await supabaseClient
     .from("veiculos")
     .update({
       nome: novoNome,
-      zona_area: converterNumero(novaZona),
+      zona_area: novaZona,
       imagem_url,
       imagem_path,
       mapa_url: imagem_url,
       mapa_path: imagem_path,
       atualizado_em: new Date().toISOString(),
     })
-    .eq("codigo", pastaAberta.codigo);
+    .eq("codigo", codigoAtual);
 
   if (error) {
-    console.error("Erro ao editar pasta:", error);
-    alert("Erro ao editar pasta.");
+    console.error("Erro ao salvar edição:", error);
+    alert("Erro ao salvar edição.");
     return;
   }
 
-  const codigoAtual = pastaAberta.codigo;
+  fecharModalEdicao();
 
   await carregarVeiculos();
   await abrirPasta(codigoAtual);
