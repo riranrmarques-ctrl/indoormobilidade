@@ -3,98 +3,234 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>central-painel | drivvio mobilidade</title>
-    <link rel="stylesheet" href="central-painel.css" />
+    <title>painel-central | drivvio mobilidade</title>
+    <link rel="stylesheet" href="painel-central.css" />
+    <script src="painel-central.js" defer></script>
   </head>
   <body>
-    <main class="dashboard-shell">
-      <header class="topbar">
-        <div>
-          <img class="brand-logo" src="assets/drivvio-logo.png" alt="drivvio" />
-          <span class="eyebrow">central de mobilidade</span>
+    <main class="system-shell">
+      <aside class="sidebar" aria-label="Menu principal">
+        <div class="brand-lockup">
+          <img class="brand-logo" src="logo.png" alt="drivvio" />
+          <small>mobilidade urbana</small>
         </div>
 
-        <nav class="main-nav" aria-label="Areas da central">
-          <button class="active" type="button">Visao geral</button>
-          <button type="button">Campanhas</button>
-          <button type="button">Veiculos</button>
-          <button type="button">Conteudos</button>
-          <button type="button">Relatorios</button>
+        <nav class="side-nav">
+          <button class="active" type="button"><span>⌂</span>Dashboard</button>
+          <button type="button"><span>✈</span>Campanhas</button>
+          <button type="button"><span>▣</span>Anuncios</button>
+          <button type="button"><span>≋</span>Playlists</button>
+          <button type="button"><span>◫</span>Agendamentos</button>
+          <button type="button"><span>▱</span>Veiculos</button>
+          <button type="button"><span>▯</span>Tablets</button>
+          <button type="button"><span>⌁</span>Relatorios</button>
+          <button type="button"><span>◌</span>Analytics</button>
+          <button type="button"><span>⚙</span>Configuracoes</button>
         </nav>
 
-        <button class="primary-action" type="button">Nova campanha</button>
-      </header>
+        <button class="new-ad-button" type="button">Novo anuncio</button>
+      </aside>
 
-      <section class="hero-panel" aria-label="Resumo da operacao">
-        <div>
-          <span class="eyebrow">frota em operacao</span>
-          <h1>Controle os conteudos, tablets e campanhas de cada veiculo.</h1>
-          <p>
-            Cadastre anunciantes, envie midias para a frota, acompanhe tablets
-            online e veja onde cada interacao aconteceu durante a viagem.
-          </p>
-        </div>
-
-        <div class="operation-card">
-          <span>Status da rede</span>
-          <strong id="networkStatus">84% online</strong>
-          <small>42 de 50 tablets sincronizados</small>
-        </div>
-      </section>
-
-      <section class="metrics-grid" aria-label="Indicadores da central">
-        <article>
-          <span>Veiculos ativos</span>
-          <strong>50</strong>
-          <small>+8 nesta semana</small>
-        </article>
-        <article>
-          <span>Campanhas no ar</span>
-          <strong>12</strong>
-          <small>3 aguardando aprovacao</small>
-        </article>
-        <article>
-          <span>Interacoes hoje</span>
-          <strong id="interactionTotal">1.248</strong>
-          <small>quiz, QR Code e toque</small>
-        </article>
-        <article>
-          <span>Conteudos enviados</span>
-          <strong>186</strong>
-          <small>videos, banners e quizzes</small>
-        </article>
-      </section>
-
-      <section class="workspace-grid">
-        <section class="panel campaign-panel" aria-label="Campanhas">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow">gestao comercial</span>
-              <h2>Campanhas por anunciante</h2>
-            </div>
-            <button class="ghost-action" type="button">Filtrar</button>
+      <section class="main-area">
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">sistema de mobilidade</span>
+            <h1>Central de gestao urbana</h1>
+            <p>Gerenciamento de anuncios para tablets nos veiculos</p>
           </div>
 
-          <div class="campaign-list" id="campaignList"></div>
+          <div class="topbar-widgets">
+            <div class="online-dot">Sistema Online</div>
+            <div class="mini-widget">
+              <strong>24°C</strong>
+              <span>Parcialmente nublado</span>
+            </div>
+            <div class="mini-widget">
+              <strong id="todayDate">30/04/2026</strong>
+              <span>Operacao ativa</span>
+            </div>
+            <div class="mini-widget">
+              <strong id="clock">22:30</strong>
+              <span>Administrador</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="metric-strip" aria-label="Indicadores principais">
+          <article class="metric-card purple">
+            <span class="metric-icon">▯</span>
+            <div>
+              <small>Tablets ativos</small>
+              <strong>1.248</strong>
+              <span>de 1.350 · 92,4% online</span>
+            </div>
+          </article>
+
+          <article class="metric-card blue">
+            <span class="metric-icon">▱</span>
+            <div>
+              <small>Veiculos ativos</small>
+              <strong>356</strong>
+              <span>de 380 · 93,7% em operacao</span>
+            </div>
+          </article>
+
+          <article class="metric-card green">
+            <span class="metric-icon">▶</span>
+            <div>
+              <small>Anuncios em exibicao</small>
+              <strong>128</strong>
+              <span>24 playlists rodando</span>
+            </div>
+          </article>
+
+          <article class="metric-card yellow">
+            <span class="metric-icon">●●</span>
+            <div>
+              <small>Passageiros impactados</small>
+              <strong>25.680</strong>
+              <span>+12,5% vs ontem</span>
+            </div>
+          </article>
+
+          <article class="metric-card pink">
+            <span class="metric-icon">▂▅█</span>
+            <div>
+              <small>Impressoes hoje</small>
+              <strong id="impressionsToday">128.450</strong>
+              <span>+15,3% vs ontem</span>
+            </div>
+          </article>
         </section>
 
-        <section class="panel fleet-panel" aria-label="Veiculos e tablets">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow">frota</span>
-              <h2>Veiculos e tablets</h2>
+        <section class="dashboard-grid">
+          <section class="panel live-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Reproducao ao vivo</h2>
+                <p>Acompanhe o que esta sendo exibido nos tablets</p>
+              </div>
+              <span class="live-badge">Ao vivo</span>
             </div>
-            <button class="ghost-action" id="syncButton" type="button">Sincronizar</button>
-          </div>
 
-          <div class="fleet-list" id="fleetList"></div>
+            <div class="live-layout">
+              <div class="city-map" aria-label="Mapa de veiculos em operacao">
+                <span class="route route-one"></span>
+                <span class="route route-two"></span>
+                <button class="car-point active" style="--x: 18%; --y: 62%">▱</button>
+                <button class="car-point" style="--x: 32%; --y: 48%">▱</button>
+                <button class="car-point" style="--x: 46%; --y: 70%">▱</button>
+                <button class="car-point" style="--x: 60%; --y: 39%">▱</button>
+                <button class="car-point" style="--x: 76%; --y: 57%">▱</button>
+                <button class="car-point" style="--x: 86%; --y: 31%">▱</button>
+              </div>
+
+              <aside class="tablet-preview">
+                <div class="tablet-screen">
+                  <span>Mega Burger</span>
+                  <strong>2 por 1</strong>
+                  <small>Campanha em exibicao</small>
+                </div>
+
+                <dl>
+                  <div><dt>Veiculo</dt><dd>ABC-1234</dd></div>
+                  <div><dt>Linha</dt><dd>Barra / Aeroporto</dd></div>
+                  <div><dt>Motorista</dt><dd>Joao Silva</dd></div>
+                  <div><dt>Tablet</dt><dd>DRV-TAB-08</dd></div>
+                </dl>
+
+                <div class="countdown"><span></span></div>
+              </aside>
+            </div>
+          </section>
+
+          <aside class="panel status-panel">
+            <div class="panel-head">
+              <h2>Status do sistema</h2>
+            </div>
+
+            <ul class="status-list">
+              <li><span>Wi</span>Conexao com tablets <strong>Online</strong></li>
+              <li><span>Md</span>Servidor de midia <strong>Online</strong></li>
+              <li><span>Sy</span>Sincronizacao <strong>Sincronizado</strong></li>
+              <li><span>Ar</span>Armazenamento <strong>78% disponivel</strong></li>
+            </ul>
+
+            <div class="storage-bar"><span></span></div>
+          </aside>
+
+          <section class="panel campaigns-panel">
+            <div class="panel-head">
+              <h2>Campanhas ativas</h2>
+              <button type="button">Ver todas</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Campanha</th>
+                    <th>Anuncios</th>
+                    <th>Veiculos</th>
+                    <th>Impressoes</th>
+                    <th>CTR</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="campaignRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside class="panel performance-panel">
+            <div class="panel-head">
+              <h2>Desempenho hoje</h2>
+              <button type="button">Hoje</button>
+            </div>
+
+            <div class="chart" aria-label="Grafico de desempenho">
+              <span style="--h: 18%"></span>
+              <span style="--h: 28%"></span>
+              <span style="--h: 42%"></span>
+              <span style="--h: 51%"></span>
+              <span style="--h: 66%"></span>
+              <span style="--h: 73%"></span>
+              <span style="--h: 88%"></span>
+              <span style="--h: 82%"></span>
+              <span style="--h: 74%"></span>
+              <span style="--h: 70%"></span>
+            </div>
+
+            <div class="performance-stats">
+              <div><span>Impressoes</span><strong>128.450</strong></div>
+              <div><span>Cliques</span><strong>2.847</strong></div>
+              <div><span>CTR</span><strong>2,21%</strong></div>
+            </div>
+          </aside>
+
+          <section class="panel schedule-panel">
+            <div class="panel-head">
+              <h2>Agendamentos proximos</h2>
+              <button type="button">Ver todos</button>
+            </div>
+
+            <div class="schedule-list" id="scheduleRows"></div>
+          </section>
+
+          <aside class="panel ranking-panel">
+            <div class="panel-head">
+              <h2>Top campanhas</h2>
+              <button type="button">Hoje</button>
+            </div>
+
+            <ol id="rankingRows"></ol>
+
+            <footer>
+              Ultima atualizacao: <span id="lastUpdate">--:--:--</span>
+            </footer>
+          </aside>
         </section>
-
-        <section class="panel content-panel" aria-label="Conteudos agendados">
-          <div class="section-head">
-            <div>
-              <span class="eyebrow">programacao</span>
-              <h2>Fila de conteudos</h2>
-            </div>
-            <button class="ghost-action" type="button">Enviar midia</button>
-          </div>
+      </section>
+    </main>
+  </body>
+</html>
