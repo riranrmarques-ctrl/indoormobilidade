@@ -83,6 +83,7 @@ a {
   width: 130px;
   height: auto;
   object-fit: contain;
+  background: transparent;
 }
 
 .eyebrow {
@@ -322,31 +323,14 @@ dd {
   gap: 16px;
 }
 
-.folder-page-toolbar {
-  min-height: 54px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(12, 27, 42, 0.88);
-}
-
 .back-to-folders {
-  min-height: 38px;
-  padding: 0 14px;
+  min-height: 46px;
+  padding: 0 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel-soft);
   color: var(--text);
   cursor: pointer;
-  font-weight: 900;
-}
-
-.folder-page-toolbar span {
-  color: var(--green);
   font-weight: 900;
 }
 
@@ -366,18 +350,36 @@ dd {
 }
 
 .folder-detail {
-  padding: 22px;
+  padding: 26px;
   display: grid;
-  grid-template-columns: minmax(360px, 0.9fr) 1fr;
-  gap: 28px;
+  gap: 24px;
+}
+
+.detail-card-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.detail-card-head > strong {
+  color: #c5d3e0;
+  font-size: 1.05rem;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(420px, 0.92fr) 1fr;
+  gap: 30px;
   align-items: center;
 }
 
 .detail-media {
-  height: 360px;
+  height: 330px;
   overflow: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--line);
+  background: #091624;
 }
 
 .detail-media img {
@@ -389,7 +391,9 @@ dd {
 
 .detail-info h2 {
   margin: 8px 0 10px;
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: 0;
 }
 
 .detail-topline {
@@ -408,8 +412,8 @@ dd {
 
 .detail-actions button,
 .section-head button {
-  min-height: 46px;
-  padding: 0 18px;
+  min-height: 50px;
+  padding: 0 22px;
   border: 1px solid var(--line);
   background: var(--panel-soft);
   color: var(--text);
@@ -468,7 +472,8 @@ dd {
 
 @media (max-width: 1100px) {
   .playlist-header,
-  .folder-detail {
+  .detail-layout,
+  .detail-card-head {
     grid-template-columns: 1fr;
   }
 
