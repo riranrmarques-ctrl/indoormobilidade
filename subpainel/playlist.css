@@ -41,7 +41,6 @@ a {
 }
 
 .playlist-header,
-.summary-ribbon,
 .folder-card,
 .folder-detail,
 .playlist-table {
@@ -114,7 +113,8 @@ h1 {
   color: var(--muted);
 }
 
-.create-folder {
+.create-folder,
+.delete-page {
   min-height: 46px;
   padding: 0 18px;
   border: 0;
@@ -125,51 +125,40 @@ h1 {
   font-weight: 900;
 }
 
-.summary-ribbon {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 12px;
+.delete-page {
+  background: var(--red);
+  color: #fff;
 }
 
-.summary-ribbon article {
-  min-height: 76px;
-  padding: 12px 14px;
-  border-right: 1px solid var(--line);
-}
-
-.summary-ribbon article:last-child {
-  border-right: 0;
-}
-
-.summary-ribbon span,
-.summary-ribbon small {
-  color: var(--muted);
-}
-
-.summary-ribbon strong {
-  display: block;
-  margin: 4px 0 2px;
-  color: var(--green);
-  font-size: 1.55rem;
+.is-hidden {
+  display: none !important;
 }
 
 .folder-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
 .folder-card {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .status-line {
   display: flex;
   align-items: center;
-  gap: 9px;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 14px;
   color: var(--green);
+}
+
+.status-line > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
 .status-dot {
@@ -219,9 +208,43 @@ h1 {
   background: linear-gradient(135deg, rgba(255, 95, 103, 0.3), rgba(7, 19, 30, 0.95));
 }
 
+.folder-cover.ondina {
+  background: linear-gradient(135deg, rgba(0, 224, 135, 0.22), rgba(51, 168, 255, 0.2), rgba(7, 19, 30, 0.95));
+}
+
+.folder-cover.imbui {
+  background: linear-gradient(135deg, rgba(51, 168, 255, 0.34), rgba(0, 224, 135, 0.12), rgba(7, 19, 30, 0.95));
+}
+
+.folder-cover.caminho {
+  background: linear-gradient(135deg, rgba(255, 189, 61, 0.28), rgba(142, 92, 255, 0.12), rgba(7, 19, 30, 0.95));
+}
+
+.folder-cover.comercio {
+  background: linear-gradient(135deg, rgba(255, 95, 103, 0.24), rgba(51, 168, 255, 0.14), rgba(7, 19, 30, 0.95));
+}
+
 .folder-card h2 {
   margin-top: 14px;
-  font-size: 1.55rem;
+  font-size: clamp(1.55rem, 2vw, 2.05rem);
+  line-height: 1.05;
+}
+
+.folder-vehicles,
+.folder-zone {
+  width: fit-content;
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(101, 142, 180, 0.22);
+  border-radius: 999px;
+  background: rgba(16, 35, 53, 0.72);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.folder-zone {
+  margin-bottom: 18px;
 }
 
 dl {
@@ -256,6 +279,7 @@ dd {
 .open-folder {
   width: 100%;
   min-height: 52px;
+  margin-top: auto;
   background: var(--green);
   color: #04130d;
 }
@@ -277,14 +301,6 @@ dd {
 .folder-page {
   display: grid;
   gap: 16px;
-}
-
-.folder-page.is-hidden {
-  display: none;
-}
-
-.folder-grid.is-hidden {
-  display: none;
 }
 
 .folder-page-toolbar {
@@ -415,7 +431,6 @@ dd {
     grid-template-columns: 1fr;
   }
 
-  .summary-ribbon,
   .folder-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -432,18 +447,8 @@ dd {
     flex-direction: column;
   }
 
-  .summary-ribbon,
   .folder-grid {
     grid-template-columns: 1fr;
-  }
-
-  .summary-ribbon article {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .summary-ribbon article:last-child {
-    border-bottom: 0;
   }
 
   .folder-detail {
