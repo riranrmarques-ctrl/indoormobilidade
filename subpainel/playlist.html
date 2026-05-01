@@ -17,39 +17,32 @@
           <div>
             <span class="eyebrow">gestao de playlists</span>
             <h1>Veiculos Indoor</h1>
-            <p>Organize playlists por bairro da cidade e acompanhe o status de cada pasta.</p>
+            <p>Crie pastas por bairro, copie os codigos temporarios e abra a playlist da pagina.</p>
           </div>
         </div>
 
-        <div class="header-status">
-          <span>Sistema Online</span>
-          <strong>Modo demonstracao</strong>
-        </div>
+        <button class="create-folder" type="button">+ Criar nova pasta</button>
       </header>
 
-      <section class="summary-grid" aria-label="Resumo das playlists">
+      <section class="summary-ribbon" aria-label="Resumo das playlists">
         <article>
-          <span>Pastas criadas</span>
-          <strong>12</strong>
-          <small>bairros cadastrados</small>
+          <span>Pastas</span>
+          <strong>4</strong>
         </article>
 
         <article>
           <span>Playlists ativas</span>
-          <strong>8</strong>
-          <small>rodando em veiculos</small>
+          <strong>2</strong>
         </article>
 
         <article>
           <span>Videos enviados</span>
-          <strong>46</strong>
-          <small>arquivos na central</small>
+          <strong>18</strong>
         </article>
 
         <article>
-          <span>Status geral</span>
-          <strong>Ok</strong>
-          <small>sem plugar em API ainda</small>
+          <span>Codigos temporarios</span>
+          <strong>4</strong>
         </article>
       </section>
 
@@ -65,12 +58,20 @@
           <h2>Barra</h2>
 
           <dl>
-            <div><dt>Nome da playlist</dt><dd>BAIRRO DA CIDADE</dd></div>
-            <div><dt>Status</dt><dd>Ativa</dd></div>
-            <div><dt>Codigo</dt><dd>DRV-BAR-01</dd></div>
+            <div>
+              <dt>Nome da playlist</dt>
+              <dd>BAIRRO DA CIDADE</dd>
+            </div>
+
+            <div>
+              <dt>Codigo</dt>
+              <dd>
+                <button class="copy-code" type="button" data-code="H4D3">H4D3</button>
+              </dd>
+            </div>
           </dl>
 
-          <button class="open-folder" type="button" data-folder="Barra">Abrir pasta</button>
+          <button class="open-folder" type="button" data-folder="Barra">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
@@ -84,12 +85,20 @@
           <h2>Pituba</h2>
 
           <dl>
-            <div><dt>Nome da playlist</dt><dd>BAIRRO DA CIDADE</dd></div>
-            <div><dt>Status</dt><dd>Ativa</dd></div>
-            <div><dt>Codigo</dt><dd>DRV-PIT-02</dd></div>
+            <div>
+              <dt>Nome da playlist</dt>
+              <dd>BAIRRO DA CIDADE</dd>
+            </div>
+
+            <div>
+              <dt>Codigo</dt>
+              <dd>
+                <button class="copy-code" type="button" data-code="J3J2">J3J2</button>
+              </dd>
+            </div>
           </dl>
 
-          <button class="open-folder" type="button" data-folder="Pituba">Abrir pasta</button>
+          <button class="open-folder" type="button" data-folder="Pituba">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
@@ -103,12 +112,20 @@
           <h2>Rio Vermelho</h2>
 
           <dl>
-            <div><dt>Nome da playlist</dt><dd>BAIRRO DA CIDADE</dd></div>
-            <div><dt>Status</dt><dd>Aguardando midia</dd></div>
-            <div><dt>Codigo</dt><dd>DRV-RVM-03</dd></div>
+            <div>
+              <dt>Nome da playlist</dt>
+              <dd>BAIRRO DA CIDADE</dd>
+            </div>
+
+            <div>
+              <dt>Codigo</dt>
+              <dd>
+                <button class="copy-code" type="button" data-code="J1N3">J1N3</button>
+              </dd>
+            </div>
           </dl>
 
-          <button class="open-folder" type="button" data-folder="Rio Vermelho">Abrir pasta</button>
+          <button class="open-folder" type="button" data-folder="Rio Vermelho">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
@@ -122,84 +139,121 @@
           <h2>Itapua</h2>
 
           <dl>
-            <div><dt>Nome da playlist</dt><dd>BAIRRO DA CIDADE</dd></div>
-            <div><dt>Status</dt><dd>Sem exibicao</dd></div>
-            <div><dt>Codigo</dt><dd>DRV-ITA-04</dd></div>
+            <div>
+              <dt>Nome da playlist</dt>
+              <dd>BAIRRO DA CIDADE</dd>
+            </div>
+
+            <div>
+              <dt>Codigo</dt>
+              <dd>
+                <button class="copy-code" type="button" data-code="M3D8">M3D8</button>
+              </dd>
+            </div>
           </dl>
 
-          <button class="open-folder" type="button" data-folder="Itapua">Abrir pasta</button>
+          <button class="open-folder" type="button" data-folder="Itapua">Abrir pagina</button>
         </article>
       </section>
 
-      <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
-        <div class="detail-media">
-          <img src="mapa-salvador.png" alt="Mapa de Salvador" />
+      <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
+        <div class="folder-page-toolbar">
+          <button class="back-to-folders" id="backToFolders" type="button">
+            ← Voltar para pastas
+          </button>
+
+          <span id="openedFolderLabel">Pasta aberta: Barra</span>
         </div>
 
-        <div class="detail-info">
-          <span class="eyebrow">pasta aberta</span>
-          <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
-          <p>Playlist de midias para exibicao nos tablets dos veiculos indoor.</p>
-
-          <dl>
-            <div><dt>Bairro</dt><dd id="detailDistrict">Barra</dd></div>
-            <div><dt>Status</dt><dd id="detailStatus">Ativa</dd></div>
-            <div><dt>Codigo</dt><dd id="detailCode">DRV-BAR-01</dd></div>
-            <div><dt>Veiculos vinculados</dt><dd>38</dd></div>
-          </dl>
-
-          <div class="detail-actions">
-            <button type="button">Editar informacoes</button>
-            <button type="button">Adicionar midia</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="playlist-table" aria-label="Playlist ativa">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">conteudo da pasta</span>
-            <h2>Playlist ativa</h2>
+        <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
+          <div class="detail-media">
+            <img src="mapa-salvador.png" alt="Mapa de Salvador" />
           </div>
 
-          <button type="button">Reordenar</button>
-        </div>
+          <div class="detail-info">
+            <span class="eyebrow">pagina aberta</span>
+            <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
+            <p>Playlist de midias para exibicao nos tablets dos veiculos indoor.</p>
 
-        <div class="file-row">
-          <span class="drag-handle">⋮⋮</span>
-          <strong>1.</strong>
-          <p>ABERTURA_BAIRRO_DA_CIDADE.mp4</p>
+            <dl>
+              <div>
+                <dt>Bairro</dt>
+                <dd id="detailDistrict">Barra</dd>
+              </div>
 
-          <div class="file-actions">
-            <button type="button">↗</button>
-            <button type="button">✎</button>
-            <button type="button">⌫</button>
+              <div>
+                <dt>Status</dt>
+                <dd id="detailStatus">Ativa</dd>
+              </div>
+
+              <div>
+                <dt>Codigo</dt>
+                <dd>
+                  <button class="copy-code detail-code" id="detailCode" type="button" data-code="H4D3">
+                    H4D3
+                  </button>
+                </dd>
+              </div>
+
+              <div>
+                <dt>Veiculos vinculados</dt>
+                <dd id="detailVehicles">38</dd>
+              </div>
+            </dl>
+
+            <div class="detail-actions">
+              <button type="button">Editar informacoes</button>
+              <button type="button">Adicionar midia</button>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="file-row">
-          <span class="drag-handle">⋮⋮</span>
-          <strong>2.</strong>
-          <p>PROMOCAO_LOCAL_15S.mp4</p>
+        <section class="playlist-table" aria-label="Playlist ativa">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">conteudo da pasta</span>
+              <h2>Playlist ativa</h2>
+            </div>
 
-          <div class="file-actions">
-            <button type="button">↗</button>
-            <button type="button">✎</button>
-            <button type="button">⌫</button>
+            <button type="button">Reordenar</button>
           </div>
-        </div>
 
-        <div class="file-row">
-          <span class="drag-handle">⋮⋮</span>
-          <strong>3.</strong>
-          <p>QUIZ_INTERATIVO_PASSAGEIRO.mp4</p>
+          <div class="file-row">
+            <span class="drag-handle">⋮⋮</span>
+            <strong>1.</strong>
+            <p>ABERTURA_BAIRRO_DA_CIDADE.mp4</p>
 
-          <div class="file-actions">
-            <button type="button">↗</button>
-            <button type="button">✎</button>
-            <button type="button">⌫</button>
+            <div class="file-actions">
+              <button type="button">↗</button>
+              <button type="button">✎</button>
+              <button type="button">⌫</button>
+            </div>
           </div>
-        </div>
+
+          <div class="file-row">
+            <span class="drag-handle">⋮⋮</span>
+            <strong>2.</strong>
+            <p>PROMOCAO_LOCAL_15S.mp4</p>
+
+            <div class="file-actions">
+              <button type="button">↗</button>
+              <button type="button">✎</button>
+              <button type="button">⌫</button>
+            </div>
+          </div>
+
+          <div class="file-row">
+            <span class="drag-handle">⋮⋮</span>
+            <strong>3.</strong>
+            <p>QUIZ_INTERATIVO_PASSAGEIRO.mp4</p>
+
+            <div class="file-actions">
+              <button type="button">↗</button>
+              <button type="button">✎</button>
+              <button type="button">⌫</button>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
   </body>
