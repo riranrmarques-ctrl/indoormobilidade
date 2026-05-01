@@ -14,9 +14,7 @@
   --radius: 8px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   min-height: 100vh;
@@ -28,10 +26,7 @@ body {
   color: var(--text);
 }
 
-button,
-a {
-  font: inherit;
-}
+button, a { font: inherit; }
 
 .playlist-shell {
   width: min(1480px, calc(100% - 48px));
@@ -39,8 +34,6 @@ a {
   display: grid;
   gap: 16px;
 }
-
-/* ===== HEADER ===== */
 
 .playlist-header,
 .folder-card,
@@ -92,19 +85,13 @@ a {
   text-transform: uppercase;
 }
 
-h1, h2, p {
-  margin: 0;
-}
-
-/* ===== GRID ===== */
+h1, h2, p { margin: 0; }
 
 .folder-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
-
-/* ===== CARDS ===== */
 
 .folder-card {
   padding: 16px;
@@ -125,9 +112,7 @@ h1, h2, p {
   background: var(--green);
 }
 
-.status-dot.inactive {
-  background: var(--red);
-}
+.status-dot.inactive { background: var(--red); }
 
 .folder-cover {
   height: 160px;
@@ -135,9 +120,7 @@ h1, h2, p {
   background: linear-gradient(135deg, #102335, #07131e);
 }
 
-.folder-card h2 {
-  margin-top: 10px;
-}
+.folder-card h2 { margin-top: 10px; }
 
 .open-folder {
   margin-top: auto;
@@ -147,8 +130,6 @@ h1, h2, p {
   border-radius: var(--radius);
   font-weight: 900;
 }
-
-/* ===== PLAYLIST ===== */
 
 .file-row {
   margin-top: 10px;
@@ -165,8 +146,6 @@ h1, h2, p {
   height: 36px;
 }
 
-/* ===== BOTÕES ===== */
-
 .detail-actions button {
   height: 44px;
   border-radius: var(--radius);
@@ -176,12 +155,13 @@ h1, h2, p {
   font-weight: 900;
 }
 
+.detail-actions .danger,
 .detail-actions .danger-action {
   background: rgba(255, 95, 103, 0.2);
   color: var(--red);
 }
 
-/* ===== MODAL NOVO ===== */
+/* ===== MODAL COMPLETO ===== */
 
 .modal {
   position: fixed;
@@ -191,7 +171,6 @@ h1, h2, p {
   align-items: center;
   justify-content: center;
   z-index: 999;
-  backdrop-filter: blur(6px);
 }
 
 .modal.is-hidden {
@@ -201,7 +180,6 @@ h1, h2, p {
 .modal-box {
   width: 420px;
   background: var(--panel);
-  border: 1px solid var(--line);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -226,7 +204,6 @@ h1, h2, p {
   height: 200px;
   border-radius: 10px;
   background: #020617;
-  border: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,12 +221,11 @@ h1, h2, p {
   font-size: 0.85rem;
 }
 
-/* BOTÕES MODAL */
+/* BOTÕES */
 
 .modal-actions {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .modal-actions button {
@@ -271,10 +247,6 @@ h1, h2, p {
   color: var(--text);
 }
 
-/* ===== RESPONSIVO ===== */
-
 @media (max-width: 900px) {
-  .folder-grid {
-    grid-template-columns: 1fr;
-  }
+  .folder-grid { grid-template-columns: 1fr; }
 }
