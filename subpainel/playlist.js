@@ -5,6 +5,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let veiculos = [];
 let pastaAberta = null;
+let editPreviewObjectUrl = null;
 
 const detailTitle = document.querySelector("#detailTitle");
 const detailDistrict = document.querySelector("#detailDistrict");
@@ -31,6 +32,11 @@ const editModal = document.querySelector("#editModal");
 const editNome = document.querySelector("#editNome");
 const editZona = document.querySelector("#editZona");
 const editImagem = document.querySelector("#editImagem");
+const editPreviewEmpty = document.querySelector("#editPreviewEmpty");
+const editPreviewImage = document.querySelector("#editPreviewImage");
+const editZoom = document.querySelector("#editZoom");
+const editPosX = document.querySelector("#editPosX");
+const editPosY = document.querySelector("#editPosY");
 const cancelEdit = document.querySelector("#cancelEdit");
 const saveEdit = document.querySelector("#saveEdit");
 
@@ -62,6 +68,10 @@ async function iniciarPagina() {
 
   cancelEdit?.addEventListener("click", fecharModalEdicao);
   saveEdit?.addEventListener("click", salvarEdicaoPasta);
+  editImagem?.addEventListener("change", atualizarPreviewEdicao);
+  editZoom?.addEventListener("input", aplicarAjustePreviewEdicao);
+  editPosX?.addEventListener("input", aplicarAjustePreviewEdicao);
+  editPosY?.addEventListener("input", aplicarAjustePreviewEdicao);
 
   cancelUpload?.addEventListener("click", fecharModalUpload);
   confirmUpload?.addEventListener("click", salvarNovaMidia);
@@ -76,8 +86,8 @@ async function carregarVeiculos() {
     .order("nome", { ascending: true });
 
   if (error) {
-    console.error("Erro ao carregar veículos:", error);
-    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veículos.</p>`;
+    console.error("Erro ao carregar veÃ­culos:", error);
+    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veÃ­culos.</p>`;
     return;
   }
 
@@ -95,6 +105,10 @@ function renderizarPastas() {
 
   veiculos.forEach((item) => {
     const ativo = String(item.status || "ativo").toLowerCase() !== "inativo";
+    const imagemUrl = item.imagem_url || "";
+    const zoom = item.imagem_zoom || 1;
+    const posX = item.imagem_pos_x || 0;
+    const posY = item.imagem_pos_y || 0;
 
     const card = document.createElement("article");
     card.className = "folder-card";
@@ -111,15 +125,19 @@ function renderizarPastas() {
         </button>
       </div>
 
-      <div class="folder-cover salvador">
-        ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome || "Pasta"}">` : ""}
+      <div class="folder-cover">
+        ${
+          imagemUrl
+            ? `<img src="${imagemUrl}" alt="${item.nome || "Pasta"}" style="transform: translate(${posX}%, ${posY}%) scale(${zoom});">`
+            : `<span class="folder-cover-empty"></span>`
+        }
       </div>
 
       <h2>${item.nome || "Pasta sem nome"}</h2>
 
       <div class="folder-stats">
         <span>
-          <small>Veículos</small>
+          <small>VeÃ­culos</small>
           <strong>${item.veiculos_vinculados || 0}</strong>
         </span>
 
@@ -130,7 +148,7 @@ function renderizarPastas() {
       </div>
 
       <button class="open-folder" type="button" data-code="${item.codigo || ""}">
-        Abrir página
+        Abrir pÃ¡gina
       </button>
     `;
 
@@ -175,8 +193,10 @@ async function abrirPasta(codigo) {
   detailCampaigns.textContent = data.campanhas_ativas || 0;
   detailQuizzes.textContent = formatarNumero(data.quiz_interacao || 0);
 
-  if (data.mapa_url || data.imagem_url) {
-    detailMapImage.src = data.mapa_url || data.imagem_url;
+  const imagemDetalhe = data.mapa_url || data.imagem_url;
+
+  if (imagemDetalhe) {
+    detailMapImage.src = imagemDetalhe;
     detailMapImage.style.display = "block";
   } else {
     detailMapImage.removeAttribute("src");
@@ -211,7 +231,7 @@ async function carregarPlaylist(codigo) {
   }
 
   if (!data || !data.length) {
-    playlistList.innerHTML = `<p class="playlist-empty">Nenhuma mídia adicionada ainda.</p>`;
+    playlistList.innerHTML = `<p class="playlist-empty">Nenhuma mÃ­dia adicionada ainda.</p>`;
     return;
   }
 
@@ -222,21 +242,21 @@ async function carregarPlaylist(codigo) {
     row.className = "file-row";
 
     row.innerHTML = `
-      <span class="drag-handle">⋮⋮</span>
+      <span class="drag-handle">â‹®â‹®</span>
 
       <strong>${index + 1}.</strong>
 
       <p>
-        ${item.nome_arquivo || item.nome || item.link_url || "Mídia sem nome"}
-        <small style="display:block;opacity:.65;text-transform:uppercase;margin-top:4px;">
+        ${item.nome_arquivo || item.nome || item.link_url || "MÃ­dia sem nome"}
+        <small>
           ${item.tipo || "video"}
         </small>
       </p>
 
       <div class="file-actions">
-        <button type="button" data-action="abrir" data-id="${item.id}">↗</button>
-        <button type="button" data-action="editar" data-id="${item.id}">✎</button>
-        <button type="button" data-action="excluir" data-id="${item.id}">⌫</button>
+        <button type="button" data-action="abrir" data-id="${item.id}">â†—</button>
+        <button type="button" data-action="editar" data-id="${item.id}">âœŽ</button>
+        <button type="button" data-action="excluir" data-id="${item.id}">âŒ«</button>
       </div>
     `;
 
@@ -258,7 +278,7 @@ async function criarPasta() {
   const nome = prompt("Nome da nova pasta:");
   if (!nome) return;
 
-  const zona = prompt("Zona / área em km2:");
+  const zona = prompt("Zona / Ã¡rea em km2:");
   const codigo = gerarCodigoPasta();
 
   const { error } = await supabaseClient
@@ -299,10 +319,12 @@ function abrirModalUpload() {
   atualizarCamposUpload();
 
   uploadModal.classList.remove("is-hidden");
+  uploadModal.setAttribute("aria-hidden", "false");
 }
 
 function fecharModalUpload() {
   uploadModal.classList.add("is-hidden");
+  uploadModal.setAttribute("aria-hidden", "true");
   limparPreviewUpload();
 }
 
@@ -374,7 +396,7 @@ async function salvarNovaMidia() {
   const nome = mediaNome.value.trim();
 
   if (!nome) {
-    alert("Digite o nome da mídia.");
+    alert("Digite o nome da mÃ­dia.");
     return;
   }
 
@@ -455,8 +477,8 @@ async function salvarNovaMidia() {
     });
 
   if (error) {
-    console.error("Erro ao salvar mídia:", error);
-    alert("Erro ao salvar mídia no banco.");
+    console.error("Erro ao salvar mÃ­dia:", error);
+    alert("Erro ao salvar mÃ­dia no banco.");
     return;
   }
 
@@ -470,12 +492,62 @@ function editarPasta() {
   editNome.value = pastaAberta.nome || "";
   editZona.value = pastaAberta.zona_area || "";
   editImagem.value = "";
+  editZoom.value = pastaAberta.imagem_zoom || 1;
+  editPosX.value = pastaAberta.imagem_pos_x || 0;
+  editPosY.value = pastaAberta.imagem_pos_y || 0;
 
+  if (pastaAberta.imagem_url) {
+    editPreviewImage.src = pastaAberta.imagem_url;
+    editPreviewImage.style.display = "block";
+    editPreviewEmpty.style.display = "none";
+  } else {
+    editPreviewImage.removeAttribute("src");
+    editPreviewImage.style.display = "none";
+    editPreviewEmpty.style.display = "grid";
+  }
+
+  aplicarAjustePreviewEdicao();
   editModal.classList.remove("is-hidden");
+  editModal.setAttribute("aria-hidden", "false");
 }
 
 function fecharModalEdicao() {
   editModal.classList.add("is-hidden");
+  editModal.setAttribute("aria-hidden", "true");
+
+  if (editPreviewObjectUrl) {
+    URL.revokeObjectURL(editPreviewObjectUrl);
+    editPreviewObjectUrl = null;
+  }
+}
+
+function atualizarPreviewEdicao() {
+  const file = editImagem.files[0];
+
+  if (!file) {
+    if (pastaAberta?.imagem_url) {
+      editPreviewImage.src = pastaAberta.imagem_url;
+      editPreviewImage.style.display = "block";
+      editPreviewEmpty.style.display = "none";
+    }
+    return;
+  }
+
+  if (editPreviewObjectUrl) {
+    URL.revokeObjectURL(editPreviewObjectUrl);
+  }
+
+  editPreviewObjectUrl = URL.createObjectURL(file);
+  editPreviewImage.src = editPreviewObjectUrl;
+  editPreviewImage.style.display = "block";
+  editPreviewEmpty.style.display = "none";
+  aplicarAjustePreviewEdicao();
+}
+
+function aplicarAjustePreviewEdicao() {
+  if (!editPreviewImage) return;
+
+  editPreviewImage.style.transform = `translate(${editPosX.value}%, ${editPosY.value}%) scale(${editZoom.value})`;
 }
 
 async function salvarEdicaoPasta() {
@@ -522,27 +594,49 @@ async function salvarEdicaoPasta() {
 
   const codigoAtual = pastaAberta.codigo;
 
-  const { error } = await supabaseClient
-  .from("veiculos")
-  .update({
+  const updatePayload = {
     nome: novoNome,
     zona_area: novaZona,
     imagem_url,
     imagem_path,
+    imagem_zoom: converterNumero(editZoom.value) || 1,
+    imagem_pos_x: converterNumero(editPosX.value),
+    imagem_pos_y: converterNumero(editPosY.value),
     atualizado_em: new Date().toISOString(),
-  })
-  .eq("codigo", codigoAtual);
+  };
 
-if (error) {
-  console.error("Erro ao salvar edição:", error);
-  alert("Erro ao salvar edição.");
-  return;
-}
+  let { error } = await supabaseClient
+    .from("veiculos")
+    .update(updatePayload)
+    .eq("codigo", codigoAtual);
 
-fecharModalEdicao();
+  if (error && String(error.message || "").includes("imagem_")) {
+    const fallbackPayload = {
+      nome: novoNome,
+      zona_area: novaZona,
+      imagem_url,
+      imagem_path,
+      atualizado_em: new Date().toISOString(),
+    };
 
-await carregarVeiculos();
-await abrirPasta(codigoAtual);
+    const fallback = await supabaseClient
+      .from("veiculos")
+      .update(fallbackPayload)
+      .eq("codigo", codigoAtual);
+
+    error = fallback.error;
+  }
+
+  if (error) {
+    console.error("Erro ao salvar ediÃ§Ã£o:", error);
+    alert("Erro ao salvar ediÃ§Ã£o.");
+    return;
+  }
+
+  fecharModalEdicao();
+
+  await carregarVeiculos();
+  await abrirPasta(codigoAtual);
 }
 
 async function excluirPasta() {
@@ -562,6 +656,10 @@ async function excluirPasta() {
   const arquivos = (midias || [])
     .map((item) => item.storage_path)
     .filter(Boolean);
+
+  if (pastaAberta.imagem_path) {
+    arquivos.push(pastaAberta.imagem_path);
+  }
 
   if (arquivos.length) {
     await supabaseClient.storage.from("playlist-media").remove(arquivos);
@@ -595,14 +693,14 @@ async function abrirMidia(id) {
     .single();
 
   if (error || !data) {
-    alert("Erro ao abrir mídia.");
+    alert("Erro ao abrir mÃ­dia.");
     return;
   }
 
   const url = data.arquivo_url || data.video_url || data.link_url;
 
   if (!url) {
-    alert("Esta mídia ainda não tem URL.");
+    alert("Esta mÃ­dia ainda nÃ£o tem URL.");
     return;
   }
 
@@ -610,7 +708,7 @@ async function abrirMidia(id) {
 }
 
 async function editarMidia(id) {
-  const novoNome = prompt("Novo nome da mídia:");
+  const novoNome = prompt("Novo nome da mÃ­dia:");
   if (!novoNome) return;
 
   const { error } = await supabaseClient
@@ -623,8 +721,8 @@ async function editarMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao editar mídia:", error);
-    alert("Erro ao editar mídia.");
+    console.error("Erro ao editar mÃ­dia:", error);
+    alert("Erro ao editar mÃ­dia.");
     return;
   }
 
@@ -634,7 +732,7 @@ async function editarMidia(id) {
 }
 
 async function excluirMidia(id) {
-  const confirmar = confirm("Deseja excluir esta mídia?");
+  const confirmar = confirm("Deseja excluir esta mÃ­dia?");
   if (!confirmar) return;
 
   const { data: midia } = await supabaseClient
@@ -655,8 +753,8 @@ async function excluirMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao excluir mídia:", error);
-    alert("Erro ao excluir mídia.");
+    console.error("Erro ao excluir mÃ­dia:", error);
+    alert("Erro ao excluir mÃ­dia.");
     return;
   }
 
@@ -675,7 +773,7 @@ function closeFolderPage() {
   folderHeaderBackButton.classList.add("is-hidden");
   playlistHeader.classList.remove("is-folder-context");
 
-  openedFolderLabel.textContent = "Gerencie as pastas e campanhas dos veículos.";
+  openedFolderLabel.textContent = "Gerencie as pastas e campanhas dos veÃ­culos.";
 }
 
 function limparNomeArquivo(nome) {
@@ -702,17 +800,12 @@ function formatarNumero(valor) {
 }
 
 function gerarCodigoPasta() {
-  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numeros = "0123456789";
+  const caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   let codigo = "";
 
-  for (let i = 0; i < 3; i++) {
-    codigo += letras[Math.floor(Math.random() * letras.length)];
-  }
-
   for (let i = 0; i < 4; i++) {
-    codigo += numeros[Math.floor(Math.random() * numeros.length)];
+    codigo += caracteres[Math.floor(Math.random() * caracteres.length)];
   }
 
   return codigo;
