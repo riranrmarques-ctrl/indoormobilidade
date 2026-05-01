@@ -293,14 +293,11 @@ async function adicionarMidia() {
 async function editarPasta() {
   if (!pastaAberta) return;
 
-  const novoNome = prompt("Nome do bairro/pasta:", pastaAberta.nome || "");
+  const novoNome = prompt("Nome da pasta:", pastaAberta.nome || "");
   if (!novoNome) return;
 
-  const novoStatus = prompt("Status: ativo ou inativo", pastaAberta.status || "ativo") || pastaAberta.status;
-  const novosVeiculos = prompt("Veículos vinculados:", pastaAberta.veiculos_vinculados || 0);
-  const novaZona = prompt("Zona de área:", pastaAberta.zona_area || 0);
-  const novasCampanhas = prompt("Campanhas ativas:", pastaAberta.campanhas_ativas || 0);
-  const novosQuizzes = prompt("Quiz interação:", pastaAberta.quiz_interacao || 0);
+  const novaZona = prompt("Tamanho da área em km²:", pastaAberta.zona_area || "");
+  if (!novaZona) return;
 
   let imagem_url = pastaAberta.imagem_url || null;
   let imagem_path = pastaAberta.imagem_path || null;
@@ -309,6 +306,7 @@ async function editarPasta() {
 
   if (trocarImagem) {
     const file = await escolherArquivo("imagem");
+
     if (file) {
       const extensao = file.name.split(".").pop();
       const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
@@ -334,6 +332,29 @@ async function editarPasta() {
       imagem_path = caminho;
     }
   }
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .update({
+      nome: novoNome,
+      zona_area: converterNumero(novaZona),
+      imagem_url,
+      imagem_path,
+      mapa_url: imagem_url,
+      mapa_path: imagem_path,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("codigo", pastaAberta.codigo);
+
+  if (error) {
+    console.error(error);
+    alert("Erro ao editar pasta.");
+    return;
+  }
+
+  await carregarVeiculos();
+  await abrirPasta(pastaAberta.codigo);
+}
 
   const { error } = await supabaseClient
     .from("veiculos")
