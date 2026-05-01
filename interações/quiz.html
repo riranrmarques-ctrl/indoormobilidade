@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Interativo</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #040816;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  background: #0a1a40;
+  color: white;
+}
+
+button:hover {
+  background: #1c3cff;
+}
+
+#resultado {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="pergunta"></h2>
+<div id="opcoes"></div>
+
+<div id="resultado">
+  <h2 id="tituloFinal"></h2>
+  <a id="linkFinal" href="#" target="_blank">
+    <button>Acessar agora</button>
+  </a>
+</div>
+
+<script>
+
+// 🔎 pega parâmetros da URL
+const params = new URLSearchParams(window.location.search);
+const campanha = params.get("campanha");
+
+// 🎯 CONFIGURAÇÕES DAS CAMPANHAS
+const campanhas = {
+
+  atakarejo: {
+    pergunta: "O que você mais compra no mercado?",
+    opcoes: ["🥩 Carnes", "🥤 Bebidas", "🧼 Limpeza", "🍚 Básico"],
+    tituloFinal: "Seu desconto no Atakarejo 👇",
+    link: "https://www.atakarejo.com.br/"
+  },
+
+  academia: {
+    pergunta: "Qual seu objetivo?",
+    opcoes: ["💪 Ganhar massa", "🔥 Emagrecer", "🏃 Condicionamento"],
+    tituloFinal: "Fale agora com a academia 👇",
+    link: "https://wa.me/559999999999"
+  },
+
+  restaurante: {
+    pergunta: "O que você quer comer hoje?",
+    opcoes: ["🍔 Lanche", "🍕 Pizza", "🍣 Japonês"],
+    tituloFinal: "Veja as opções disponíveis 👇",
+    link: "https://instagram.com"
+  }
+
+};
+
+// 🔥 define campanha atual
+const config = campanhas[campanha] || campanhas.atakarejo;
+
+// 🧠 aplica pergunta
+document.getElementById("pergunta").innerText = config.pergunta;
+
+// 🧩 cria botões
+const container = document.getElementById("opcoes");
+
+config.opcoes.forEach(op => {
+  const btn = document.createElement("button");
+  btn.innerText = op;
+  btn.onclick = finalizar;
+  container.appendChild(btn);
+});
+
+// 🎯 final
+function finalizar() {
+  document.getElementById("opcoes").style.display = "none";
+  document.getElementById("pergunta").style.display = "none";
+  document.getElementById("resultado").style.display = "block";
+
+  document.getElementById("tituloFinal").innerText = config.tituloFinal;
+  document.getElementById("linkFinal").href = config.link;
+}
+
+</script>
+
+</body>
+</html>
