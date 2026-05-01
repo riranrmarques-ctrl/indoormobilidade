@@ -51,7 +51,6 @@ const folders = {
 
 const detailTitle = document.querySelector("#detailTitle");
 const detailDistrict = document.querySelector("#detailDistrict");
-const detailStatus = document.querySelector("#detailStatus");
 const detailCode = document.querySelector("#detailCode");
 const detailVehicles = document.querySelector("#detailVehicles");
 const folderPage = document.querySelector("#folderPage");
@@ -61,6 +60,7 @@ const backToFolders = document.querySelector("#backToFolders");
 const generalButton = document.querySelector("#generalButton");
 const createFolderButton = document.querySelector("#createFolderButton");
 const deletePageButton = document.querySelector("#deletePageButton");
+const openedFolderStatus = document.querySelector("#openedFolderStatus");
 
 function copyCode(button) {
   const code = button.dataset.code;
@@ -86,11 +86,11 @@ document.querySelectorAll(".open-folder").forEach((button) => {
 
     detailTitle.textContent = "BAIRRO DA CIDADE";
     detailDistrict.textContent = data.district;
-    detailStatus.textContent = data.status;
     detailCode.textContent = data.code;
     detailCode.dataset.code = data.code;
     detailVehicles.textContent = data.vehicles;
     openedFolderLabel.textContent = `Pasta aberta: ${data.district}`;
+    openedFolderStatus.textContent = data.status;
 
     generalButton.classList.add("is-hidden");
     createFolderButton.classList.add("is-hidden");
