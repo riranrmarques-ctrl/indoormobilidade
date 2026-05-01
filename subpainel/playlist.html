@@ -10,10 +10,10 @@
   <body>
     <main class="playlist-shell">
       <header class="playlist-header">
-        <a class="back-button" href="painel-central.html">← Geral</a>
+        <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
 
         <div class="header-title">
-          <img class="brand-logo" src="../logo.png" alt="drivvio" />
+          <img class="brand-logo" src="logo.png" alt="drivvio" />
           <div>
             <span class="eyebrow">gestao de playlists</span>
             <h1>Veiculos Indoor</h1>
@@ -21,147 +21,111 @@
           </div>
         </div>
 
-        <button class="create-folder" type="button">+ Criar nova pasta</button>
+        <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
+        <button class="delete-page is-hidden" id="deletePageButton" type="button">Excluir página</button>
       </header>
-
-      <section class="summary-ribbon" aria-label="Resumo das playlists">
-        <article>
-          <span>Pastas</span>
-          <strong>4</strong>
-        </article>
-
-        <article>
-          <span>Playlists ativas</span>
-          <strong>2</strong>
-        </article>
-
-        <article>
-          <span>Videos enviados</span>
-          <strong>18</strong>
-        </article>
-
-        <article>
-          <span>Codigos temporarios</span>
-          <strong>4</strong>
-        </article>
-      </section>
 
       <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro">
         <article class="folder-card">
           <div class="status-line">
-            <span class="status-dot active"></span>
-            <strong>Ativo</strong>
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="H4D3">H4D3</button>
           </div>
-
           <div class="folder-cover salvador"></div>
-
           <h2>Barra</h2>
-
-          <dl>
-            <div>
-              <dt>Nome da playlist</dt>
-              <dd>BAIRRO DA CIDADE</dd>
-            </div>
-
-            <div>
-              <dt>Codigo</dt>
-              <dd>
-                <button class="copy-code" type="button" data-code="H4D3">H4D3</button>
-              </dd>
-            </div>
-          </dl>
-
+          <p class="folder-vehicles">Veiculos: 38</p>
+          <p class="folder-zone">Zona: 7,4 km²</p>
           <button class="open-folder" type="button" data-folder="Barra">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
           <div class="status-line">
-            <span class="status-dot active"></span>
-            <strong>Ativo</strong>
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="J3J2">J3J2</button>
           </div>
-
           <div class="folder-cover pituba"></div>
-
           <h2>Pituba</h2>
-
-          <dl>
-            <div>
-              <dt>Nome da playlist</dt>
-              <dd>BAIRRO DA CIDADE</dd>
-            </div>
-
-            <div>
-              <dt>Codigo</dt>
-              <dd>
-                <button class="copy-code" type="button" data-code="J3J2">J3J2</button>
-              </dd>
-            </div>
-          </dl>
-
+          <p class="folder-vehicles">Veiculos: 42</p>
+          <p class="folder-zone">Zona: 10,8 km²</p>
           <button class="open-folder" type="button" data-folder="Pituba">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
           <div class="status-line">
-            <span class="status-dot warning"></span>
-            <strong>Pendente</strong>
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="J1N3">J1N3</button>
           </div>
-
           <div class="folder-cover rio-vermelho"></div>
-
           <h2>Rio Vermelho</h2>
-
-          <dl>
-            <div>
-              <dt>Nome da playlist</dt>
-              <dd>BAIRRO DA CIDADE</dd>
-            </div>
-
-            <div>
-              <dt>Codigo</dt>
-              <dd>
-                <button class="copy-code" type="button" data-code="J1N3">J1N3</button>
-              </dd>
-            </div>
-          </dl>
-
+          <p class="folder-vehicles">Veiculos: 24</p>
+          <p class="folder-zone">Zona: 5,1 km²</p>
           <button class="open-folder" type="button" data-folder="Rio Vermelho">Abrir pagina</button>
         </article>
 
         <article class="folder-card">
           <div class="status-line">
-            <span class="status-dot inactive"></span>
-            <strong>Inativo</strong>
+            <span><span class="status-dot inactive"></span><strong>Inativo</strong></span>
+            <button class="copy-code" type="button" data-code="M3D8">M3D8</button>
           </div>
-
           <div class="folder-cover itapua"></div>
-
           <h2>Itapua</h2>
-
-          <dl>
-            <div>
-              <dt>Nome da playlist</dt>
-              <dd>BAIRRO DA CIDADE</dd>
-            </div>
-
-            <div>
-              <dt>Codigo</dt>
-              <dd>
-                <button class="copy-code" type="button" data-code="M3D8">M3D8</button>
-              </dd>
-            </div>
-          </dl>
-
+          <p class="folder-vehicles">Veiculos: 16</p>
+          <p class="folder-zone">Zona: 12,6 km²</p>
           <button class="open-folder" type="button" data-folder="Itapua">Abrir pagina</button>
+        </article>
+
+        <article class="folder-card">
+          <div class="status-line">
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="A7B2">A7B2</button>
+          </div>
+          <div class="folder-cover ondina"></div>
+          <h2>Ondina</h2>
+          <p class="folder-vehicles">Veiculos: 28</p>
+          <p class="folder-zone">Zona: 4,9 km²</p>
+          <button class="open-folder" type="button" data-folder="Ondina">Abrir pagina</button>
+        </article>
+
+        <article class="folder-card">
+          <div class="status-line">
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="C8L5">C8L5</button>
+          </div>
+          <div class="folder-cover imbui"></div>
+          <h2>Imbui</h2>
+          <p class="folder-vehicles">Veiculos: 31</p>
+          <p class="folder-zone">Zona: 9,2 km²</p>
+          <button class="open-folder" type="button" data-folder="Imbui">Abrir pagina</button>
+        </article>
+
+        <article class="folder-card">
+          <div class="status-line">
+            <span><span class="status-dot active"></span><strong>Ativo</strong></span>
+            <button class="copy-code" type="button" data-code="P9K4">P9K4</button>
+          </div>
+          <div class="folder-cover caminho"></div>
+          <h2>Caminho das Arvores</h2>
+          <p class="folder-vehicles">Veiculos: 35</p>
+          <p class="folder-zone">Zona: 6,3 km²</p>
+          <button class="open-folder" type="button" data-folder="Caminho das Arvores">Abrir pagina</button>
+        </article>
+
+        <article class="folder-card">
+          <div class="status-line">
+            <span><span class="status-dot inactive"></span><strong>Inativo</strong></span>
+            <button class="copy-code" type="button" data-code="S2V6">S2V6</button>
+          </div>
+          <div class="folder-cover comercio"></div>
+          <h2>Comercio</h2>
+          <p class="folder-vehicles">Veiculos: 12</p>
+          <p class="folder-zone">Zona: 3,8 km²</p>
+          <button class="open-folder" type="button" data-folder="Comercio">Abrir pagina</button>
         </article>
       </section>
 
       <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
         <div class="folder-page-toolbar">
-          <button class="back-to-folders" id="backToFolders" type="button">
-            ← Voltar para pastas
-          </button>
-
+          <button class="back-to-folders" id="backToFolders" type="button">← Voltar para pastas</button>
           <span id="openedFolderLabel">Pasta aberta: Barra</span>
         </div>
 
@@ -176,29 +140,10 @@
             <p>Playlist de midias para exibicao nos tablets dos veiculos indoor.</p>
 
             <dl>
-              <div>
-                <dt>Bairro</dt>
-                <dd id="detailDistrict">Barra</dd>
-              </div>
-
-              <div>
-                <dt>Status</dt>
-                <dd id="detailStatus">Ativa</dd>
-              </div>
-
-              <div>
-                <dt>Codigo</dt>
-                <dd>
-                  <button class="copy-code detail-code" id="detailCode" type="button" data-code="H4D3">
-                    H4D3
-                  </button>
-                </dd>
-              </div>
-
-              <div>
-                <dt>Veiculos vinculados</dt>
-                <dd id="detailVehicles">38</dd>
-              </div>
+              <div><dt>Bairro</dt><dd id="detailDistrict">Barra</dd></div>
+              <div><dt>Status</dt><dd id="detailStatus">Ativa</dd></div>
+              <div><dt>Codigo</dt><dd><button class="copy-code detail-code" id="detailCode" type="button" data-code="H4D3">H4D3</button></dd></div>
+              <div><dt>Veiculos vinculados</dt><dd id="detailVehicles">38</dd></div>
             </dl>
 
             <div class="detail-actions">
@@ -214,15 +159,12 @@
               <span class="eyebrow">conteudo da pasta</span>
               <h2>Playlist ativa</h2>
             </div>
-
-            <button type="button">Reordenar</button>
           </div>
 
           <div class="file-row">
             <span class="drag-handle">⋮⋮</span>
             <strong>1.</strong>
             <p>ABERTURA_BAIRRO_DA_CIDADE.mp4</p>
-
             <div class="file-actions">
               <button type="button">↗</button>
               <button type="button">✎</button>
@@ -234,7 +176,6 @@
             <span class="drag-handle">⋮⋮</span>
             <strong>2.</strong>
             <p>PROMOCAO_LOCAL_15S.mp4</p>
-
             <div class="file-actions">
               <button type="button">↗</button>
               <button type="button">✎</button>
@@ -246,7 +187,6 @@
             <span class="drag-handle">⋮⋮</span>
             <strong>3.</strong>
             <p>QUIZ_INTERATIVO_PASSAGEIRO.mp4</p>
-
             <div class="file-actions">
               <button type="button">↗</button>
               <button type="button">✎</button>
