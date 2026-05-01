@@ -1,100 +1,567 @@
-const campaigns = [
-  {
-    brand: "Restaurante Bahia Grill",
-    status: "No ar",
-    period: "08:00 - 22:00",
-    vehicles: 32,
-    interactions: 418,
-  },
-  {
-    brand: "Clinica Sorriso Prime",
-    status: "Agendada",
-    period: "A partir de 02/05",
-    vehicles: 18,
-    interactions: 0,
-  },
-  {
-    brand: "Academia Move Fit",
-    status: "Revisao",
-    period: "18:00 - 23:30",
-    vehicles: 24,
-    interactions: 166,
-  },
-];
+const SUPABASE_URL = "https://phuerrdaioaoylukhqml.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_u5dGbUm03WG2056mW2ySNQ_xltzBtU4";
 
-const fleet = [
-  { vehicle: "APP-2048", tablet: "DRV-TAB-042", area: "Barra", battery: 86, online: true },
-  { vehicle: "APP-1180", tablet: "DRV-TAB-031", area: "Pituba", battery: 64, online: true },
-  { vehicle: "APP-3021", tablet: "DRV-TAB-019", area: "Rio Vermelho", battery: 41, online: false },
-  { vehicle: "APP-0994", tablet: "DRV-TAB-055", area: "Centro", battery: 78, online: true },
-];
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const contents = [
-  { type: "Video", name: "Oferta almoço executivo", duration: "15s", target: "32 veiculos" },
-  { type: "Quiz", name: "Pergunta patrocinada", duration: "Interativo", target: "Toda frota" },
-  { type: "QR Code", name: "Cupom primeira compra", duration: "10s", target: "18 veiculos" },
-];
+let veiculos = [];
+let pastaAberta = null;
 
-const campaignList = document.querySelector("#campaignList");
-const fleetList = document.querySelector("#fleetList");
-const contentList = document.querySelector("#contentList");
-const syncButton = document.querySelector("#syncButton");
-const networkStatus = document.querySelector("#networkStatus");
-const interactionTotal = document.querySelector("#interactionTotal");
-const mapLabel = document.querySelector("#mapLabel");
-const mapPoints = document.querySelectorAll(".map-point");
-const regionFilter = document.querySelector("#regionFilter");
+const detailTitle = document.querySelector("#detailTitle");
+const detailDistrict = document.querySelector("#detailDistrict");
+const detailCode = document.querySelector("#detailCode");
+const detailVehicles = document.querySelector("#detailVehicles");
+const detailCampaigns = document.querySelector("#detailCampaigns");
+const detailQuizzes = document.querySelector("#detailQuizzes");
+const detailMapImage = document.querySelector("#detailMapImage");
 
-function renderCampaigns() {
-  campaignList.innerHTML = campaigns
-    .map(
-      (campaign) => `
-        <article class="campaign-row">
-          <div>
-            <strong>${campaign.brand}</strong>
-            <span>${campaign.period}</span>
-          </div>
-          <div class="row-meta">
-            <span>${campaign.vehicles} veiculos</span>
-            <span>${campaign.interactions} interacoes</span>
-            <mark>${campaign.status}</mark>
-          </div>
-        </article>
-      `
-    )
-    .join("");
+const folderPage = document.querySelector("#folderPage");
+const folderGrid = document.querySelector("#folderGrid");
+const openedFolderLabel = document.querySelector("#openedFolderLabel");
+const folderHeaderBackButton = document.querySelector("#folderHeaderBackButton");
+const generalButton = document.querySelector("#generalButton");
+const createFolderButton = document.querySelector("#createFolderButton");
+const playlistHeader = document.querySelector("#playlistHeader");
+const playlistList = document.querySelector("#playlistList");
+
+const addMediaButton = document.querySelector("#addMediaButton");
+const editVehicleButton = document.querySelector("#editVehicleButton");
+const deleteVehicleButton = document.querySelector("#deleteVehicleButton");
+
+const editModal = document.querySelector("#editModal");
+const editNome = document.querySelector("#editNome");
+const editZona = document.querySelector("#editZona");
+const editImagem = document.querySelector("#editImagem");
+const cancelEdit = document.querySelector("#cancelEdit");
+const saveEdit = document.querySelector("#saveEdit");
+
+document.addEventListener("DOMContentLoaded", iniciarPagina);
+
+async function iniciarPagina() {
+  await carregarVeiculos();
+
+  folderHeaderBackButton?.addEventListener("click", closeFolderPage);
+  addMediaButton?.addEventListener("click", adicionarMidia);
+  editVehicleButton?.addEventListener("click", editarPasta);
+  deleteVehicleButton?.addEventListener("click", excluirPasta);
+  detailCode?.addEventListener("click", () => copyCode(detailCode));
+
+  cancelEdit?.addEventListener("click", fecharModalEdicao);
+  saveEdit?.addEventListener("click", salvarEdicaoPasta);
 }
 
-function renderFleet() {
-  fleetList.innerHTML = fleet
-    .map(
-      (item) => `
-        <article class="fleet-row">
-          <div>
-            <strong>${item.vehicle}</strong>
-            <span>${item.tablet} · ${item.area}</span>
-          </div>
-          <div class="fleet-status">
-            <span class="${item.online ? "online" : "offline"}">${item.online ? "Online" : "Offline"}</span>
-            <small>${item.battery}% bateria</small>
-          </div>
-        </article>
-      `
-    )
-    .join("");
+async function carregarVeiculos() {
+  const { data, error } = await supabaseClient
+    .from("veiculos")
+    .select("*")
+    .order("nome", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao carregar veículos:", error);
+    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veículos.</p>`;
+    return;
+  }
+
+  veiculos = data || [];
+  renderizarPastas();
 }
 
-function renderContents() {
-  contentList.innerHTML = contents
-    .map(
-      (content) => `
-        <article class="content-row">
-          <span>${content.type}</span>
-          <div>
-            <strong>${content.name}</strong>
-            <small>${content.duration} · ${content.target}</small>
-          </div>
-        </article>
-      `
-    )
-    .join("");
+function renderizarPastas() {
+  folderGrid.innerHTML = "";
+
+  if (!veiculos.length) {
+    folderGrid.innerHTML = `<p class="playlist-empty">Nenhuma pasta cadastrada.</p>`;
+    return;
+  }
+
+  veiculos.forEach((item) => {
+    const ativo = String(item.status || "ativo").toLowerCase() !== "inativo";
+
+    const card = document.createElement("article");
+    card.className = "folder-card";
+
+    card.innerHTML = `
+      <div class="status-line">
+        <span>
+          <span class="status-dot ${ativo ? "active" : "inactive"}"></span>
+          <strong>${ativo ? "Ativo" : "Inativo"}</strong>
+        </span>
+
+        <button class="copy-code" type="button" data-code="${item.codigo}">
+          ${item.codigo}
+        </button>
+      </div>
+
+      <div class="folder-cover salvador">
+        ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome}">` : ""}
+      </div>
+
+      <h2>${item.nome}</h2>
+
+      <div class="folder-stats">
+        <span>
+          <small>Veículos</small>
+          <strong>${item.veiculos_vinculados || 0}</strong>
+        </span>
+
+        <span>
+          <small>Zona</small>
+          <strong>${formatarArea(item.zona_area)}</strong>
+        </span>
+      </div>
+
+      <button class="open-folder" type="button" data-code="${item.codigo}">
+        Abrir página
+      </button>
+    `;
+
+    folderGrid.appendChild(card);
+  });
+
+  document.querySelectorAll(".copy-code").forEach((button) => {
+    button.addEventListener("click", () => copyCode(button));
+  });
+
+  document.querySelectorAll(".open-folder").forEach((button) => {
+    button.addEventListener("click", () => abrirPasta(button.dataset.code));
+  });
+}
+
+function copyCode(button) {
+  const code = button.dataset.code;
+  if (!code) return;
+
+  navigator.clipboard?.writeText(code);
+
+  button.classList.add("copied");
+  button.textContent = "Copiado";
+
+  setTimeout(() => {
+    button.classList.remove("copied");
+    button.textContent = code;
+  }, 1200);
+}
+
+async function abrirPasta(codigo) {
+  const data = veiculos.find((item) => item.codigo === codigo);
+  if (!data) return;
+
+  pastaAberta = data;
+
+  detailTitle.textContent = data.nome || "BAIRRO DA CIDADE";
+  detailDistrict.textContent = formatarArea(data.zona_area);
+  detailCode.textContent = data.codigo;
+  detailCode.dataset.code = data.codigo;
+  detailVehicles.textContent = data.veiculos_vinculados || 0;
+  detailCampaigns.textContent = data.campanhas_ativas || 0;
+  detailQuizzes.textContent = formatarNumero(data.quiz_interacao || 0);
+
+  if (data.mapa_url || data.imagem_url) {
+    detailMapImage.src = data.mapa_url || data.imagem_url;
+    detailMapImage.style.display = "block";
+  } else {
+    detailMapImage.removeAttribute("src");
+    detailMapImage.style.display = "none";
+  }
+
+  openedFolderLabel.textContent = `Pasta aberta: ${data.nome}`;
+
+  generalButton.classList.add("is-hidden");
+  createFolderButton.classList.add("is-hidden");
+  folderHeaderBackButton.classList.remove("is-hidden");
+  playlistHeader.classList.add("is-folder-context");
+  folderGrid.classList.add("is-hidden");
+  folderPage.classList.remove("is-hidden");
+
+  await carregarPlaylist(data.codigo);
+}
+
+async function carregarPlaylist(codigo) {
+  playlistList.innerHTML = `<p class="playlist-empty">Carregando playlist...</p>`;
+
+  const { data, error } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("*")
+    .eq("codigo", codigo)
+    .order("ordem", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao carregar playlist:", error);
+    playlistList.innerHTML = `<p class="playlist-empty">Erro ao carregar playlist.</p>`;
+    return;
+  }
+
+  if (!data || !data.length) {
+    playlistList.innerHTML = `<p class="playlist-empty">Nenhuma mídia adicionada ainda.</p>`;
+    return;
+  }
+
+  playlistList.innerHTML = "";
+
+  data.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "file-row";
+
+    row.innerHTML = `
+      <span class="drag-handle">⋮⋮</span>
+
+      <strong>${index + 1}.</strong>
+
+      <p>
+        ${item.nome_arquivo || item.nome || item.link_url || "Mídia sem nome"}
+        <small style="display:block;opacity:.65;text-transform:uppercase;margin-top:4px;">
+          ${item.tipo || "video"}
+        </small>
+      </p>
+
+      <div class="file-actions">
+        <button type="button" onclick="abrirMidia('${item.id}')">↗</button>
+        <button type="button" onclick="editarMidia('${item.id}')">✎</button>
+        <button type="button" onclick="excluirMidia('${item.id}')">⌫</button>
+      </div>
+    `;
+
+    playlistList.appendChild(row);
+  });
+}
+
+async function adicionarMidia() {
+  if (!pastaAberta) {
+    alert("Abra uma pasta primeiro.");
+    return;
+  }
+
+  const tipo = prompt("Tipo da mídia: video, imagem, noticia ou quiz");
+  if (!tipo) return;
+
+  const tipoLimpo = tipo.trim().toLowerCase();
+
+  if (!["video", "imagem", "noticia", "quiz"].includes(tipoLimpo)) {
+    alert("Tipo inválido. Use: video, imagem, noticia ou quiz.");
+    return;
+  }
+
+  const nome = prompt("Nome da mídia:");
+  if (!nome) return;
+
+  let arquivo_url = null;
+  let storage_path = null;
+  let link_url = null;
+  let nome_arquivo = nome;
+
+  if (tipoLimpo === "video" || tipoLimpo === "imagem") {
+    const file = await escolherArquivo(tipoLimpo);
+    if (!file) return;
+
+    const extensao = file.name.split(".").pop();
+    const nomeSeguro = limparNomeArquivo(nome);
+    const caminho = `${pastaAberta.codigo}/${Date.now()}_${nomeSeguro}.${extensao}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("playlist-media")
+      .upload(caminho, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Erro no upload:", uploadError);
+      alert("Erro ao enviar arquivo para o Storage.");
+      return;
+    }
+
+    const { data: publicData } = supabaseClient.storage
+      .from("playlist-media")
+      .getPublicUrl(caminho);
+
+    arquivo_url = publicData.publicUrl;
+    storage_path = caminho;
+    nome_arquivo = file.name;
+  }
+
+  if (tipoLimpo === "noticia" || tipoLimpo === "quiz") {
+    link_url = prompt("Cole a URL que vai abrir:");
+    if (!link_url) return;
+  }
+
+  const { data: ultima } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("ordem")
+    .eq("codigo", pastaAberta.codigo)
+    .order("ordem", { ascending: false })
+    .limit(1);
+
+  const ordem = ultima?.length ? Number(ultima[0].ordem) + 1 : 1;
+
+  const { error } = await supabaseClient
+    .from("playlist_veiculos")
+    .insert({
+      codigo: pastaAberta.codigo,
+      nome,
+      tipo: tipoLimpo,
+      nome_arquivo,
+      arquivo_url,
+      storage_path,
+      link_url,
+      ordem,
+      ativo: true,
+      duracao: tipoLimpo === "video" ? null : 10,
+    });
+
+  if (error) {
+    console.error("Erro ao salvar mídia:", error);
+    alert("Erro ao salvar mídia no banco.");
+    return;
+  }
+
+  await carregarPlaylist(pastaAberta.codigo);
+}
+
+function editarPasta() {
+  if (!pastaAberta) return;
+
+  editNome.value = pastaAberta.nome || "";
+  editZona.value = pastaAberta.zona_area || "";
+  editImagem.value = "";
+
+  editModal.classList.remove("is-hidden");
+}
+
+function fecharModalEdicao() {
+  editModal.classList.add("is-hidden");
+}
+
+async function salvarEdicaoPasta() {
+  if (!pastaAberta) return;
+
+  const novoNome = editNome.value.trim();
+  const novaZona = converterNumero(editZona.value);
+
+  if (!novoNome) {
+    alert("Digite o nome da pasta.");
+    return;
+  }
+
+  let imagem_url = pastaAberta.imagem_url || null;
+  let imagem_path = pastaAberta.imagem_path || null;
+
+  const file = editImagem.files[0];
+
+  if (file) {
+    const extensao = file.name.split(".").pop();
+    const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("playlist-media")
+      .upload(caminho, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Erro ao enviar imagem:", uploadError);
+      alert("Erro ao enviar imagem.");
+      return;
+    }
+
+    const { data: publicData } = supabaseClient.storage
+      .from("playlist-media")
+      .getPublicUrl(caminho);
+
+    imagem_url = publicData.publicUrl;
+    imagem_path = caminho;
+  }
+
+  const codigoAtual = pastaAberta.codigo;
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .update({
+      nome: novoNome,
+      zona_area: novaZona,
+      imagem_url,
+      imagem_path,
+      mapa_url: imagem_url,
+      mapa_path: imagem_path,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("codigo", codigoAtual);
+
+  if (error) {
+    console.error("Erro ao salvar edição:", error);
+    alert("Erro ao salvar edição.");
+    return;
+  }
+
+  fecharModalEdicao();
+
+  await carregarVeiculos();
+  await abrirPasta(codigoAtual);
+}
+
+async function excluirPasta() {
+  if (!pastaAberta) return;
+
+  const confirmar = confirm(
+    `Deseja excluir a pasta ${pastaAberta.nome} e toda a playlist dela?`
+  );
+
+  if (!confirmar) return;
+
+  const { data: midias } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("storage_path")
+    .eq("codigo", pastaAberta.codigo);
+
+  const arquivos = (midias || [])
+    .map((item) => item.storage_path)
+    .filter(Boolean);
+
+  if (arquivos.length) {
+    await supabaseClient.storage.from("playlist-media").remove(arquivos);
+  }
+
+  await supabaseClient
+    .from("playlist_veiculos")
+    .delete()
+    .eq("codigo", pastaAberta.codigo);
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .delete()
+    .eq("codigo", pastaAberta.codigo);
+
+  if (error) {
+    console.error("Erro ao excluir pasta:", error);
+    alert("Erro ao excluir pasta.");
+    return;
+  }
+
+  closeFolderPage();
+  await carregarVeiculos();
+}
+
+async function abrirMidia(id) {
+  const { data, error } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    alert("Erro ao abrir mídia.");
+    return;
+  }
+
+  const url = data.arquivo_url || data.video_url || data.link_url;
+
+  if (!url) {
+    alert("Esta mídia ainda não tem URL.");
+    return;
+  }
+
+  window.open(url, "_blank");
+}
+
+async function editarMidia(id) {
+  const novoNome = prompt("Novo nome da mídia:");
+  if (!novoNome) return;
+
+  const { error } = await supabaseClient
+    .from("playlist_veiculos")
+    .update({
+      nome: novoNome,
+      nome_arquivo: novoNome,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Erro ao editar mídia:", error);
+    alert("Erro ao editar mídia.");
+    return;
+  }
+
+  if (pastaAberta) {
+    await carregarPlaylist(pastaAberta.codigo);
+  }
+}
+
+async function excluirMidia(id) {
+  const confirmar = confirm("Deseja excluir esta mídia?");
+  if (!confirmar) return;
+
+  const { data: midia } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("storage_path")
+    .eq("id", id)
+    .single();
+
+  if (midia?.storage_path) {
+    await supabaseClient.storage
+      .from("playlist-media")
+      .remove([midia.storage_path]);
+  }
+
+  const { error } = await supabaseClient
+    .from("playlist_veiculos")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Erro ao excluir mídia:", error);
+    alert("Erro ao excluir mídia.");
+    return;
+  }
+
+  if (pastaAberta) {
+    await carregarPlaylist(pastaAberta.codigo);
+  }
+}
+
+function escolherArquivo(tipo) {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+
+    if (tipo === "video") {
+      input.accept = "video/mp4,video/webm";
+    } else {
+      input.accept = "image/jpeg,image/jpg,image/png,image/webp";
+    }
+
+    input.onchange = () => resolve(input.files[0] || null);
+    input.click();
+  });
+}
+
+function closeFolderPage() {
+  pastaAberta = null;
+
+  folderPage.classList.add("is-hidden");
+  folderGrid.classList.remove("is-hidden");
+  generalButton.classList.remove("is-hidden");
+  createFolderButton.classList.remove("is-hidden");
+  folderHeaderBackButton.classList.add("is-hidden");
+  playlistHeader.classList.remove("is-folder-context");
+}
+
+function limparNomeArquivo(nome) {
+  return String(nome)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "_")
+    .toLowerCase();
+}
+
+function converterNumero(valor) {
+  return Number(String(valor).replace(",", ".")) || 0;
+}
+
+function formatarArea(valor) {
+  if (!valor) return "0 km2";
+  return `${String(valor).replace(".", ",")} km2`;
+}
+
+function formatarNumero(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR");
+}
