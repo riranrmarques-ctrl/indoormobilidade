@@ -395,19 +395,23 @@ dd {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: 0.86fr minmax(420px, 1fr);
-  gap: 30px;
+  grid-template-columns: 0.7fr minmax(520px, 1.3fr);
+  gap: 36px;
   align-items: center;
 }
 
 .detail-media-panel {
+  width: 100%;
   display: grid;
   gap: 10px;
   justify-items: end;
+  justify-self: end;
 }
 
 .detail-media {
-  height: 300px;
+  width: min(100%, 760px);
+  aspect-ratio: 16 / 9;
+  height: auto;
   overflow: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--line);
@@ -426,6 +430,13 @@ dd {
   font-size: clamp(2rem, 3.4vw, 3.8rem);
   line-height: 1;
   letter-spacing: 0;
+}
+
+.detail-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .detail-code {
