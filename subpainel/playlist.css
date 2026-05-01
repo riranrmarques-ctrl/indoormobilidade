@@ -1,22 +1,119 @@
+:root {
+  --bg: #07131e;
+  --panel: #0c1b2a;
+  --line: rgba(101, 142, 180, 0.22);
+  --text: #eef7ff;
+  --muted: #8fa5b8;
+  --green: #00e087;
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #07131e;
+  color: var(--text);
+}
+
+/* HEADER */
+
+.playlist-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* GRID */
+
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 20px;
+}
+
+/* CARD */
+
+.folder-card {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: #0c1b2a;
+}
+
+/* 🔥 CORRIGIDO AQUI (SEM MAPA FIXO) */
+
 .folder-cover {
   height: 180px;
-  border: 1px solid rgba(101, 142, 180, 0.2);
   border-radius: var(--radius);
-  background:
-    radial-gradient(circle at 64% 40%, rgba(0, 224, 135, 0.18), transparent 26%),
-    linear-gradient(135deg, #102335, #07131e);
   overflow: hidden;
+  background: #111;
 }
 
 .folder-cover img {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
 }
 
-.folder-cover.salvador {
-  background:
-    radial-gradient(circle at 64% 40%, rgba(0, 224, 135, 0.18), transparent 26%),
-    linear-gradient(135deg, #102335, #07131e);
+/* BOTÃO */
+
+.open-folder {
+  width: 100%;
+  margin-top: 10px;
+  height: 40px;
+  background: var(--green);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* MODAL */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.is-hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #0b1c2c;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* PREVIEW */
+
+.preview-box {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #000;
+  border-radius: 8px;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RANGE */
+
+input[type="range"] {
+  width: 100%;
 }
