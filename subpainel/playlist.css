@@ -136,7 +136,7 @@ h1 {
 }
 
 .create-folder,
-.delete-page {
+.header-return {
   min-height: 46px;
   padding: 0 18px;
   border: 0;
@@ -147,12 +147,13 @@ h1 {
   font-weight: 900;
 }
 
-.delete-page {
+.header-return {
   width: fit-content;
   min-width: 150px;
   justify-self: end;
-  background: var(--red);
-  color: #fff;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  color: var(--text);
 }
 
 .is-hidden {
@@ -344,17 +345,6 @@ dd {
   gap: 16px;
 }
 
-.back-to-folders {
-  min-height: 46px;
-  padding: 0 22px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel-soft);
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 900;
-}
-
 .opened-folder-status {
   position: fixed;
   right: max(24px, calc((100vw - 1480px) / 2 + 24px));
@@ -381,13 +371,6 @@ dd {
   gap: 22px;
 }
 
-.detail-card-head {
-  display: grid;
-  grid-template-columns: auto;
-  gap: 16px;
-  align-items: center;
-}
-
 .detail-layout {
   display: grid;
   grid-template-columns: 0.54fr minmax(560px, 1.46fr);
@@ -402,7 +385,7 @@ dd {
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background:
     radial-gradient(circle at 100% 0%, rgba(0, 224, 135, 0.1), transparent 32%),
     rgba(9, 22, 34, 0.42);
@@ -457,13 +440,13 @@ dd {
 .detail-metrics {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
 }
 
 .detail-metrics div {
-  min-height: 58px;
-  padding: 12px 14px;
+  min-height: 52px;
+  padding: 10px 12px;
   border: 1px solid rgba(101, 142, 180, 0.22);
   border-radius: var(--radius);
   display: flex;
@@ -495,12 +478,13 @@ dd {
 .detail-actions {
   display: flex;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: auto;
+  padding-top: 18px;
   flex-wrap: wrap;
 }
 
 .detail-actions button {
-  min-width: 190px;
+  flex: 1 1 170px;
 }
 
 .detail-actions button,
@@ -510,6 +494,12 @@ dd {
   border: 1px solid var(--line);
   background: var(--panel-soft);
   color: var(--text);
+}
+
+.detail-actions .danger-action {
+  border-color: rgba(255, 95, 103, 0.36);
+  background: rgba(255, 95, 103, 0.14);
+  color: #ff858b;
 }
 
 .playlist-table {
