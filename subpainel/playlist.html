@@ -2,23 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>playlist | drivvio</title>
 
-  <link rel="stylesheet" href="playlist.css?v=4"/>
+  <link rel="stylesheet" href="playlist.css?v=3" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="playlist.js?v=4" defer></script>
+  <script src="playlist.js?v=3" defer></script>
 </head>
 
 <body>
   <main class="playlist-shell">
-
     <header class="playlist-header" id="playlistHeader">
       <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
 
       <div class="header-title">
-        <img class="brand-logo" src="../logo.png" onerror="this.src='logo.png'" />
+        <img class="brand-logo" src="../logo.png" onerror="this.onerror=null; this.src='logo.png';" alt="drivvio" />
         <div>
           <span class="eyebrow">Gestao da playlists</span>
           <h1>Veiculos Indoor</h1>
@@ -26,67 +25,117 @@
         </div>
       </div>
 
-      <button class="create-folder" id="createFolderButton">+ Criar nova pasta</button>
-      <button class="header-return is-hidden" id="folderHeaderBackButton">← Voltar</button>
+      <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
+      <button class="header-return is-hidden" id="folderHeaderBackButton" type="button">← Voltar</button>
     </header>
 
-    <section class="folder-grid" id="folderGrid"></section>
+    <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro"></section>
 
-    <section class="folder-page is-hidden" id="folderPage">
-
-      <section class="folder-detail">
+    <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
+      <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
         <div class="detail-layout">
-
           <div class="detail-info">
-            <h2 id="detailTitle"></h2>
+            <div class="detail-topline">
+              <span class="eyebrow">pagina aberta</span>
+              <button class="copy-code detail-code" id="detailCode" type="button" data-code="">----</button>
+            </div>
+
+            <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
+
+            <dl class="detail-metrics">
+              <div>
+                <dt>Zona de Area</dt>
+                <dd id="detailDistrict">0 km2</dd>
+              </div>
+              <div>
+                <dt>Veiculos vinculados</dt>
+                <dd id="detailVehicles">0</dd>
+              </div>
+              <div>
+                <dt>Campanhas ativas</dt>
+                <dd id="detailCampaigns">0</dd>
+              </div>
+              <div>
+                <dt>Quiz interacao</dt>
+                <dd id="detailQuizzes">0</dd>
+              </div>
+            </dl>
 
             <div class="detail-actions">
-              <button id="editVehicleButton">Editar</button>
-              <button id="deleteVehicleButton">Excluir</button>
+              <button id="editVehicleButton" type="button">Editar</button>
+              <button id="deleteVehicleButton" class="danger-action" type="button">Excluir</button>
             </div>
           </div>
 
-          <div class="detail-media">
-            <img id="detailMapImage"/>
+          <div class="detail-media-panel">
+            <div class="detail-media">
+              <img id="detailMapImage" alt="Imagem da pasta" style="display:none;" />
+            </div>
           </div>
-
         </div>
       </section>
 
-    </section>
+      <section class="playlist-table" aria-label="Playlist ativa">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">conteudo da</span>
+            <h2>Playlists</h2>
+          </div>
 
+          <button id="addMediaButton" type="button">Adicionar midia</button>
+        </div>
+
+        <div id="playlistList"></div>
+      </section>
+
+      <div class="opened-folder-status" aria-label="Pasta aberta">
+        <span id="openedFolderLabel">Pasta aberta:</span>
+      </div>
+    </section>
   </main>
 
-  <!-- MODAL EDITAR -->
   <div id="editModal" class="modal is-hidden">
-    <div class="modal-content">
-
+    <div class="modal-content edit-modal-content">
       <h2>Editar Pasta</h2>
 
-      <input id="editNome" placeholder="Nome"/>
-      <input id="editZona" placeholder="Zona"/>
+      <label>Nome do bairro</label>
+      <input type="text" id="editNome">
 
-      <input type="file" id="editImagem"/>
+      <label>Zona (km²)</label>
+      <input type="text" id="editZona">
 
-      <!-- PREVIEW -->
-      <div class="preview-box">
-        <img id="previewImg"/>
+      <label>Imagem da capa</label>
+      <input type="file" id="editImagem" accept="image/*">
+
+      <div class="edit-preview-box">
+        <div class="edit-preview-frame">
+          <span id="editPreviewEmpty">Prévia da imagem</span>
+          <img id="editPreviewImage" alt="Prévia da capa" style="display:none;">
+        </div>
+
+        <div class="edit-adjustments">
+          <label>
+            Zoom
+            <input type="range" id="editZoom" min="1" max="2.5" step="0.01" value="1">
+          </label>
+
+          <label>
+            Horizontal
+            <input type="range" id="editPosX" min="-100" max="100" step="1" value="0">
+          </label>
+
+          <label>
+            Vertical
+            <input type="range" id="editPosY" min="-100" max="100" step="1" value="0">
+          </label>
+        </div>
       </div>
 
-      <label>Zoom</label>
-      <input type="range" id="zoom" min="1" max="2.5" step="0.01" value="1">
-
-      <label>X</label>
-      <input type="range" id="posX" min="-100" max="100" value="0">
-
-      <label>Y</label>
-      <input type="range" id="posY" min="-100" max="100" value="0">
-
-      <button id="cancelEdit">Cancelar</button>
-      <button id="saveEdit">Salvar</button>
-
+      <div class="modal-actions">
+        <button id="cancelEdit" type="button">Cancelar</button>
+        <button id="saveEdit" type="button">Salvar</button>
+      </div>
     </div>
   </div>
-
 </body>
 </html>
