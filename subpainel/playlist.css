@@ -41,7 +41,7 @@ a {
 }
 
 .playlist-header,
-.summary-grid article,
+.summary-ribbon,
 .folder-card,
 .folder-detail,
 .playlist-table {
@@ -53,7 +53,7 @@ a {
 }
 
 .playlist-header {
-  min-height: 112px;
+  min-height: 104px;
   padding: 18px 22px;
   display: grid;
   grid-template-columns: 130px 1fr auto;
@@ -114,40 +114,44 @@ h1 {
   color: var(--muted);
 }
 
-.header-status {
-  padding: 12px 16px;
-  border: 1px solid rgba(0, 224, 135, 0.24);
+.create-folder {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 0;
   border-radius: var(--radius);
-  background: var(--green-soft);
-  color: var(--green);
-  text-align: right;
+  background: var(--green);
+  color: #04130d;
+  cursor: pointer;
+  font-weight: 900;
 }
 
-.header-status span,
-.header-status strong {
-  display: block;
-}
-
-.summary-grid {
+.summary-ribbon {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  padding: 12px;
 }
 
-.summary-grid article {
-  padding: 18px;
+.summary-ribbon article {
+  min-height: 76px;
+  padding: 12px 14px;
+  border-right: 1px solid var(--line);
 }
 
-.summary-grid span,
-.summary-grid small {
+.summary-ribbon article:last-child {
+  border-right: 0;
+}
+
+.summary-ribbon span,
+.summary-ribbon small {
   color: var(--muted);
 }
 
-.summary-grid strong {
+.summary-ribbon strong {
   display: block;
-  margin: 8px 0 4px;
+  margin: 4px 0 2px;
   color: var(--green);
-  font-size: 2rem;
+  font-size: 1.55rem;
 }
 
 .folder-grid {
@@ -239,6 +243,7 @@ dd {
 }
 
 .open-folder,
+.copy-code,
 .detail-actions button,
 .section-head button,
 .file-actions button {
@@ -253,6 +258,61 @@ dd {
   min-height: 52px;
   background: var(--green);
   color: #04130d;
+}
+
+.copy-code {
+  padding: 4px 9px;
+  border: 1px solid rgba(0, 224, 135, 0.28);
+  background: rgba(0, 224, 135, 0.11);
+  color: var(--green);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.copy-code.copied {
+  color: #04130d;
+  background: var(--green);
+}
+
+.folder-page {
+  display: grid;
+  gap: 16px;
+}
+
+.folder-page.is-hidden {
+  display: none;
+}
+
+.folder-grid.is-hidden {
+  display: none;
+}
+
+.folder-page-toolbar {
+  min-height: 54px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(12, 27, 42, 0.88);
+}
+
+.back-to-folders {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-soft);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.folder-page-toolbar span {
+  color: var(--green);
+  font-weight: 900;
 }
 
 .folder-detail {
@@ -355,7 +415,7 @@ dd {
     grid-template-columns: 1fr;
   }
 
-  .summary-grid,
+  .summary-ribbon,
   .folder-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -372,9 +432,18 @@ dd {
     flex-direction: column;
   }
 
-  .summary-grid,
+  .summary-ribbon,
   .folder-grid {
     grid-template-columns: 1fr;
+  }
+
+  .summary-ribbon article {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .summary-ribbon article:last-child {
+    border-bottom: 0;
   }
 
   .folder-detail {
