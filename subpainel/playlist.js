@@ -34,19 +34,39 @@ const editImagem = document.querySelector("#editImagem");
 const cancelEdit = document.querySelector("#cancelEdit");
 const saveEdit = document.querySelector("#saveEdit");
 
+const uploadModal = document.querySelector("#uploadModal");
+const mediaTipo = document.querySelector("#mediaTipo");
+const mediaNome = document.querySelector("#mediaNome");
+const mediaFile = document.querySelector("#mediaFile");
+const mediaLink = document.querySelector("#mediaLink");
+const mediaFileBox = document.querySelector("#mediaFileBox");
+const mediaLinkBox = document.querySelector("#mediaLinkBox");
+const previewImage = document.querySelector("#previewImage");
+const previewVideo = document.querySelector("#previewVideo");
+const previewEmpty = document.querySelector("#previewEmpty");
+const cancelUpload = document.querySelector("#cancelUpload");
+const confirmUpload = document.querySelector("#confirmUpload");
+
 document.addEventListener("DOMContentLoaded", iniciarPagina);
 
 async function iniciarPagina() {
   await carregarVeiculos();
 
   folderHeaderBackButton?.addEventListener("click", closeFolderPage);
-  addMediaButton?.addEventListener("click", adicionarMidia);
+  addMediaButton?.addEventListener("click", abrirModalUpload);
   editVehicleButton?.addEventListener("click", editarPasta);
   deleteVehicleButton?.addEventListener("click", excluirPasta);
+  createFolderButton?.addEventListener("click", criarPasta);
+
   detailCode?.addEventListener("click", () => copyCode(detailCode));
 
   cancelEdit?.addEventListener("click", fecharModalEdicao);
   saveEdit?.addEventListener("click", salvarEdicaoPasta);
+
+  cancelUpload?.addEventListener("click", fecharModalUpload);
+  confirmUpload?.addEventListener("click", salvarNovaMidia);
+  mediaTipo?.addEventListener("change", atualizarCamposUpload);
+  mediaFile?.addEventListener("change", atualizarPreviewUpload);
 }
 
 async function carregarVeiculos() {
@@ -86,16 +106,16 @@ function renderizarPastas() {
           <strong>${ativo ? "Ativo" : "Inativo"}</strong>
         </span>
 
-        <button class="copy-code" type="button" data-code="${item.codigo}">
-          ${item.codigo}
+        <button class="copy-code" type="button" data-code="${item.codigo || ""}">
+          ${item.codigo || "---"}
         </button>
       </div>
 
       <div class="folder-cover salvador">
-        ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome}">` : ""}
+        ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome || "Pasta"}">` : ""}
       </div>
 
-      <h2>${item.nome}</h2>
+      <h2>${item.nome || "Pasta sem nome"}</h2>
 
       <div class="folder-stats">
         <span>
@@ -109,7 +129,7 @@ function renderizarPastas() {
         </span>
       </div>
 
-      <button class="open-folder" type="button" data-code="${item.codigo}">
+      <button class="open-folder" type="button" data-code="${item.codigo || ""}">
         Abrir página
       </button>
     `;
@@ -127,7 +147,7 @@ function renderizarPastas() {
 }
 
 function copyCode(button) {
-  const code = button.dataset.code;
+  const code = button.dataset.code || button.textContent.trim();
   if (!code) return;
 
   navigator.clipboard?.writeText(code);
@@ -149,8 +169,8 @@ async function abrirPasta(codigo) {
 
   detailTitle.textContent = data.nome || "BAIRRO DA CIDADE";
   detailDistrict.textContent = formatarArea(data.zona_area);
-  detailCode.textContent = data.codigo;
-  detailCode.dataset.code = data.codigo;
+  detailCode.textContent = data.codigo || "---";
+  detailCode.dataset.code = data.codigo || "";
   detailVehicles.textContent = data.veiculos_vinculados || 0;
   detailCampaigns.textContent = data.campanhas_ativas || 0;
   detailQuizzes.textContent = formatarNumero(data.quiz_interacao || 0);
@@ -163,14 +183,14 @@ async function abrirPasta(codigo) {
     detailMapImage.style.display = "none";
   }
 
-  openedFolderLabel.textContent = `Pasta aberta: ${data.nome}`;
+  openedFolderLabel.textContent = `Pasta aberta: ${data.nome || ""}`;
 
-  generalButton.classList.add("is-hidden");
-  createFolderButton.classList.add("is-hidden");
-  folderHeaderBackButton.classList.remove("is-hidden");
-  playlistHeader.classList.add("is-folder-context");
-  folderGrid.classList.add("is-hidden");
-  folderPage.classList.remove("is-hidden");
+  generalButton?.classList.add("is-hidden");
+  createFolderButton?.classList.add("is-hidden");
+  folderHeaderBackButton?.classList.remove("is-hidden");
+  playlistHeader?.classList.add("is-folder-context");
+  folderGrid?.classList.add("is-hidden");
+  folderPage?.classList.remove("is-hidden");
 
   await carregarPlaylist(data.codigo);
 }
@@ -214,34 +234,149 @@ async function carregarPlaylist(codigo) {
       </p>
 
       <div class="file-actions">
-        <button type="button" onclick="abrirMidia('${item.id}')">↗</button>
-        <button type="button" onclick="editarMidia('${item.id}')">✎</button>
-        <button type="button" onclick="excluirMidia('${item.id}')">⌫</button>
+        <button type="button" data-action="abrir" data-id="${item.id}">↗</button>
+        <button type="button" data-action="editar" data-id="${item.id}">✎</button>
+        <button type="button" data-action="excluir" data-id="${item.id}">⌫</button>
       </div>
     `;
 
     playlistList.appendChild(row);
   });
+
+  playlistList.querySelectorAll("button[data-action]").forEach((button) => {
+    const id = button.dataset.id;
+
+    button.addEventListener("click", () => {
+      if (button.dataset.action === "abrir") abrirMidia(id);
+      if (button.dataset.action === "editar") editarMidia(id);
+      if (button.dataset.action === "excluir") excluirMidia(id);
+    });
+  });
 }
 
-async function adicionarMidia() {
+async function criarPasta() {
+  const nome = prompt("Nome da nova pasta:");
+  if (!nome) return;
+
+  const zona = prompt("Zona / área em km2:");
+  const codigo = gerarCodigoPasta();
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .insert({
+      nome: nome.trim(),
+      codigo,
+      zona_area: converterNumero(zona || 0),
+      veiculos_vinculados: 0,
+      campanhas_ativas: 0,
+      quiz_interacao: 0,
+      status: "ativo",
+      criado_em: new Date().toISOString(),
+      atualizado_em: new Date().toISOString(),
+    });
+
+  if (error) {
+    console.error("Erro ao criar pasta:", error);
+    alert("Erro ao criar pasta.");
+    return;
+  }
+
+  await carregarVeiculos();
+}
+
+function abrirModalUpload() {
   if (!pastaAberta) {
     alert("Abra uma pasta primeiro.");
     return;
   }
 
-  const tipo = prompt("Tipo da mídia: video, imagem, noticia ou quiz");
-  if (!tipo) return;
+  mediaTipo.value = "video";
+  mediaNome.value = "";
+  mediaFile.value = "";
+  mediaLink.value = "";
 
-  const tipoLimpo = tipo.trim().toLowerCase();
+  limparPreviewUpload();
+  atualizarCamposUpload();
 
-  if (!["video", "imagem", "noticia", "quiz"].includes(tipoLimpo)) {
-    alert("Tipo inválido. Use: video, imagem, noticia ou quiz.");
+  uploadModal.classList.remove("is-hidden");
+}
+
+function fecharModalUpload() {
+  uploadModal.classList.add("is-hidden");
+  limparPreviewUpload();
+}
+
+function atualizarCamposUpload() {
+  const tipo = mediaTipo.value;
+
+  limparPreviewUpload();
+
+  if (tipo === "video") {
+    mediaFileBox.classList.remove("is-hidden");
+    mediaLinkBox.classList.add("is-hidden");
+    mediaFile.accept = "video/mp4,video/webm";
+  }
+
+  if (tipo === "imagem") {
+    mediaFileBox.classList.remove("is-hidden");
+    mediaLinkBox.classList.add("is-hidden");
+    mediaFile.accept = "image/jpeg,image/jpg,image/png,image/webp";
+  }
+
+  if (tipo === "noticia" || tipo === "quiz") {
+    mediaFileBox.classList.add("is-hidden");
+    mediaLinkBox.classList.remove("is-hidden");
+    mediaFile.accept = "";
+    mediaFile.value = "";
+  }
+}
+
+function atualizarPreviewUpload() {
+  const file = mediaFile.files[0];
+  if (!file) {
+    limparPreviewUpload();
     return;
   }
 
-  const nome = prompt("Nome da mídia:");
-  if (!nome) return;
+  const url = URL.createObjectURL(file);
+
+  previewEmpty.style.display = "none";
+
+  if (file.type.startsWith("image")) {
+    previewImage.src = url;
+    previewImage.style.display = "block";
+    previewVideo.style.display = "none";
+    previewVideo.removeAttribute("src");
+  } else if (file.type.startsWith("video")) {
+    previewVideo.src = url;
+    previewVideo.style.display = "block";
+    previewImage.style.display = "none";
+    previewImage.removeAttribute("src");
+  }
+}
+
+function limparPreviewUpload() {
+  previewImage.removeAttribute("src");
+  previewVideo.removeAttribute("src");
+
+  previewImage.style.display = "none";
+  previewVideo.style.display = "none";
+
+  if (previewEmpty) {
+    previewEmpty.style.display = "block";
+  }
+}
+
+async function salvarNovaMidia() {
+  if (!pastaAberta) return;
+
+  const tipoLimpo = mediaTipo.value;
+  const nome = mediaNome.value.trim();
+
+  if (!nome) {
+    alert("Digite o nome da mídia.");
+    return;
+  }
 
   let arquivo_url = null;
   let storage_path = null;
@@ -249,12 +384,17 @@ async function adicionarMidia() {
   let nome_arquivo = nome;
 
   if (tipoLimpo === "video" || tipoLimpo === "imagem") {
-    const file = await escolherArquivo(tipoLimpo);
-    if (!file) return;
+    const file = mediaFile.files[0];
+
+    if (!file) {
+      alert("Escolha um arquivo.");
+      return;
+    }
 
     const extensao = file.name.split(".").pop();
     const nomeSeguro = limparNomeArquivo(nome);
-    const caminho = `${pastaAberta.codigo}/${Date.now()}_${nomeSeguro}.${extensao}`;
+    const pastaSegura = limparNomeArquivo(pastaAberta.codigo);
+    const caminho = `${pastaSegura}/${Date.now()}_${nomeSeguro}.${extensao}`;
 
     const { error: uploadError } = await supabaseClient.storage
       .from("playlist-media")
@@ -279,8 +419,12 @@ async function adicionarMidia() {
   }
 
   if (tipoLimpo === "noticia" || tipoLimpo === "quiz") {
-    link_url = prompt("Cole a URL que vai abrir:");
-    if (!link_url) return;
+    link_url = mediaLink.value.trim();
+
+    if (!link_url) {
+      alert("Cole a URL.");
+      return;
+    }
   }
 
   const { data: ultima } = await supabaseClient
@@ -300,11 +444,14 @@ async function adicionarMidia() {
       tipo: tipoLimpo,
       nome_arquivo,
       arquivo_url,
+      video_url: tipoLimpo === "video" ? arquivo_url : null,
       storage_path,
       link_url,
       ordem,
       ativo: true,
       duracao: tipoLimpo === "video" ? null : 10,
+      criado_em: new Date().toISOString(),
+      atualizado_em: new Date().toISOString(),
     });
 
   if (error) {
@@ -313,6 +460,7 @@ async function adicionarMidia() {
     return;
   }
 
+  fecharModalUpload();
   await carregarPlaylist(pastaAberta.codigo);
 }
 
@@ -348,7 +496,8 @@ async function salvarEdicaoPasta() {
 
   if (file) {
     const extensao = file.name.split(".").pop();
-    const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
+    const pastaSegura = limparNomeArquivo(pastaAberta.codigo);
+    const caminho = `${pastaSegura}/capa_${Date.now()}.${extensao}`;
 
     const { error: uploadError } = await supabaseClient.storage
       .from("playlist-media")
@@ -518,22 +667,6 @@ async function excluirMidia(id) {
   }
 }
 
-function escolherArquivo(tipo) {
-  return new Promise((resolve) => {
-    const input = document.createElement("input");
-    input.type = "file";
-
-    if (tipo === "video") {
-      input.accept = "video/mp4,video/webm";
-    } else {
-      input.accept = "image/jpeg,image/jpg,image/png,image/webp";
-    }
-
-    input.onchange = () => resolve(input.files[0] || null);
-    input.click();
-  });
-}
-
 function closeFolderPage() {
   pastaAberta = null;
 
@@ -543,18 +676,22 @@ function closeFolderPage() {
   createFolderButton.classList.remove("is-hidden");
   folderHeaderBackButton.classList.add("is-hidden");
   playlistHeader.classList.remove("is-folder-context");
+
+  openedFolderLabel.textContent = "Gerencie as pastas e campanhas dos veículos.";
 }
 
 function limparNomeArquivo(nome) {
-  return String(nome)
+  return String(nome || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-zA-Z0-9]/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_|_$/g, "")
     .toLowerCase();
 }
 
 function converterNumero(valor) {
-  return Number(String(valor).replace(",", ".")) || 0;
+  return Number(String(valor || 0).replace(",", ".")) || 0;
 }
 
 function formatarArea(valor) {
@@ -565,3 +702,24 @@ function formatarArea(valor) {
 function formatarNumero(valor) {
   return Number(valor || 0).toLocaleString("pt-BR");
 }
+
+function gerarCodigoPasta() {
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numeros = "0123456789";
+
+  let codigo = "";
+
+  for (let i = 0; i < 3; i++) {
+    codigo += letras[Math.floor(Math.random() * letras.length)];
+  }
+
+  for (let i = 0; i < 4; i++) {
+    codigo += numeros[Math.floor(Math.random() * numeros.length)];
+  }
+
+  return codigo;
+}
+
+window.abrirMidia = abrirMidia;
+window.editarMidia = editarMidia;
+window.excluirMidia = excluirMidia;
