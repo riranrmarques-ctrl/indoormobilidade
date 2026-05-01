@@ -1,14 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desconto Agora</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #040816, #0a1f4d);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.07);
+  padding: 28px 22px;
+  border-radius: 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+
+.sub {
+  opacity: 0.78;
+  font-size: 15px;
+  margin: 0 0 26px;
+  line-height: 1.5;
+}
+
+.btn {
+  width: 100%;
+  padding: 17px;
+  margin: 10px 0;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  backdrop-filter: blur(10px);
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: scale(1.03);
+  background: #1c3cff;
+}
+
+.cta {
+  background: #1c3cff;
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.timer {
+  margin-top: 18px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+#quiz2,
+#resultado {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="quiz1" class="card">
+    <div class="badge">Oferta exclusiva no carro</div>
+    <h1>💰 Vamos economizar hoje?</h1>
+    <p class="sub">Responda o quiz rápido e ganhe desconto agora.</p>
+
+    <button class="btn" onclick="next('mes')">🛒 Compras do mês</button>
+    <button class="btn" onclick="next('carnes')">🍖 Carnes e promoções</button>
+    <button class="btn" onclick="next('casa')">🧼 Produtos para casa</button>
+    <button class="btn" onclick="next('bebidas')">🍺 Bebidas e lazer</button>
+  </div>
+
+  <div id="quiz2" class="card">
+    <div class="badge">Só mais uma pergunta</div>
+    <h1>🔥 O que você quer agora?</h1>
+    <p class="sub">Escolha sua vantagem e desbloqueie sua oferta.</p>
+
+    <button class="btn" onclick="finalizar()">💸 Pagar mais barato</button>
+    <button class="btn" onclick="finalizar()">🎁 Ver ofertas especiais</button>
+  </div>
+
+  <div id="resultado" class="card">
+    <div class="badge">Desconto liberado</div>
+    <h1>🎉 Oferta desbloqueada!</h1>
+    <p class="sub">Acesse agora e aproveite antes que acabe.</p>
+
+    <a id="linkFinal" href="#" target="_blank">
+      <button class="btn cta">Acessar desconto agora</button>
+    </a>
+
+    <p class="timer">⏳ Oferta válida por tempo limitado</p>
+  </div>
+
+</div>
+
 <script>
+let escolha = "";
+
+function next(valor) {
+  escolha = valor;
+
+  document.getElementById("quiz1").style.display = "none";
+  document.getElementById("quiz2").style.display = "block";
+}
+
 function finalizar() {
   document.getElementById("quiz2").style.display = "none";
   document.getElementById("resultado").style.display = "block";
 
-  let link = "https://www.atakarejo.com.br/";
+  // Troque este link pelo link real da campanha
+  const link = "https://www.atakarejo.com.br/";
+
   document.getElementById("linkFinal").href = link;
 
-  // volta sozinho depois de 20s
+  // Depois de 20 segundos, volta para o começo
   setTimeout(() => {
     location.reload();
   }, 20000);
 }
 </script>
+
+</body>
+</html>
