@@ -360,8 +360,8 @@ dd {
   right: max(24px, calc((100vw - 1480px) / 2 + 24px));
   bottom: 24px;
   z-index: 40;
-  min-height: 52px;
-  padding: 8px 10px 8px 16px;
+  min-height: 46px;
+  padding: 8px 16px;
   border: 1px solid rgba(0, 224, 135, 0.3);
   border-radius: var(--radius);
   display: flex;
@@ -372,12 +372,6 @@ dd {
   backdrop-filter: blur(16px);
   color: var(--green);
   font-weight: 900;
-}
-
-.floating-code {
-  min-width: 68px;
-  min-height: 36px;
-  font-size: 0.98rem;
 }
 
 .folder-detail {
@@ -401,9 +395,15 @@ dd {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: minmax(420px, 0.95fr) 1fr;
+  grid-template-columns: 0.86fr minmax(420px, 1fr);
   gap: 30px;
   align-items: center;
+}
+
+.detail-media-panel {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
 }
 
 .detail-media {
@@ -428,11 +428,10 @@ dd {
   letter-spacing: 0;
 }
 
-.detail-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+.detail-code {
+  min-width: 72px;
+  min-height: 36px;
+  font-size: 1rem;
 }
 
 .detail-actions {
