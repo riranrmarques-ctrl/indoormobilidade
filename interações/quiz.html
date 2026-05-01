@@ -33,14 +33,12 @@ body {
   border: 1px solid rgba(255,255,255,0.12);
 }
 
-/* NOVA LOGO */
 .logo-img {
   width: 120px;
   margin: 0 auto 16px;
   display: block;
 }
 
-/* BADGE */
 .badge {
   display: inline-block;
   background: rgba(255,255,255,0.12);
@@ -94,6 +92,20 @@ h1 {
   opacity: 0.75;
 }
 
+.qr-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.qr-box canvas,
+.qr-box img {
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
+}
+
 #quiz2,
 #resultado {
   display: none;
@@ -105,8 +117,9 @@ h1 {
 
 <div class="container">
 
+  <!-- QUIZ 1 -->
   <div id="quiz1" class="card">
-    <img src="bk.png" class="logo-img">
+    <img src="atakarejo.png" class="logo-img">
 
     <div class="badge">Oferta exclusiva no carro</div>
     <h1>💰 Vamos economizar hoje?</h1>
@@ -118,8 +131,9 @@ h1 {
     <button class="btn" onclick="next('bebidas')">🍺 Bebidas e lazer</button>
   </div>
 
+  <!-- QUIZ 2 -->
   <div id="quiz2" class="card">
-    <img src="bk.png" class="logo-img">
+    <img src="atakarejo.png" class="logo-img">
 
     <div class="badge">Só mais uma pergunta</div>
     <h1>🔥 O que você quer agora?</h1>
@@ -129,14 +143,15 @@ h1 {
     <button class="btn" onclick="finalizar()">🎁 Ver ofertas especiais</button>
   </div>
 
+  <!-- RESULTADO -->
   <div id="resultado" class="card">
-    <img src="bk.png" class="logo-img">
+    <img src="atakarejo.png" class="logo-img">
 
     <div class="badge">Desconto liberado</div>
     <h1>🎉 Oferta desbloqueada!</h1>
     <p class="sub">Escaneie o QR Code abaixo e aproveite agora.</p>
 
-    <div id="qrcode" style="margin:20px auto;"></div>
+    <div id="qrcode" class="qr-box"></div>
 
     <p class="timer">📲 Aponte a câmera do celular</p>
     <p class="timer">⏳ Oferta válida por tempo limitado</p>
@@ -144,7 +159,6 @@ h1 {
 
 </div>
 
-<!-- QR CODE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
@@ -169,8 +183,6 @@ function finalizar() {
     text: link,
     width: 180,
     height: 180,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
 
