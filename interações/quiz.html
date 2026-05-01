@@ -8,104 +8,82 @@
 <style>
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(180deg, #040816, #0a1f4d);
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #040816, #0a1f4d);
   color: white;
+  height: 100vh;
+  display: flex;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+}
+
+.right {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
 }
 
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 20px;
-  text-align: center;
-}
-
-.card {
-  background: rgba(255,255,255,0.07);
-  padding: 28px 22px;
-  border-radius: 24px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-.logo-img {
-  width: 120px;
-  margin: 0 auto 16px;
-  display: block;
-}
-
-.badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.12);
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  margin-bottom: 18px;
+.logo {
+  width: 260px;
+  margin-bottom: 30px;
 }
 
 h1 {
-  font-size: 28px;
-  margin: 0 0 12px;
-  line-height: 1.15;
+  font-size: 48px;
+  margin-bottom: 15px;
 }
 
 .sub {
-  opacity: 0.78;
-  font-size: 15px;
-  margin: 0 0 26px;
-  line-height: 1.5;
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 40px;
 }
 
 .btn {
   width: 100%;
-  padding: 17px;
-  margin: 10px 0;
-  border-radius: 16px;
+  max-width: 420px;
+  padding: 18px;
+  margin: 12px 0;
+  border-radius: 18px;
   border: none;
-  font-size: 16px;
-  background: rgba(255,255,255,0.1);
+  font-size: 18px;
+  background: rgba(255,255,255,0.12);
   color: white;
-  backdrop-filter: blur(10px);
-  transition: 0.2s ease;
   cursor: pointer;
 }
 
 .btn:hover {
-  transform: scale(1.03);
   background: #1c3cff;
-}
-
-.cta {
-  background: #1c3cff;
-  font-weight: 800;
-  font-size: 17px;
-}
-
-.timer {
-  margin-top: 18px;
-  font-size: 13px;
-  opacity: 0.75;
 }
 
 .qr-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.qr-box canvas,
-.qr-box img {
   background: white;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 20px;
 }
 
+/* 🔥 TIMER */
+.timer {
+  font-size: 32px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+/* telas */
 #quiz2,
 #resultado {
   display: none;
@@ -115,46 +93,61 @@ h1 {
 
 <body>
 
-<div class="container">
+<div class="main">
 
   <!-- QUIZ 1 -->
-  <div id="quiz1" class="card">
-    <img src="atakarejo.png" class="logo-img">
+  <div id="quiz1" class="main">
 
-    <div class="badge">Oferta exclusiva no carro</div>
-    <h1>💰 Vamos economizar hoje?</h1>
-    <p class="sub">Responda o quiz rápido e ganhe desconto agora.</p>
+    <div class="left">
+      <img class="logo" src="atakarejo.png">
 
-    <button class="btn" onclick="next('mes')">🛒 Compras do mês</button>
-    <button class="btn" onclick="next('carnes')">🍖 Carnes e promoções</button>
-    <button class="btn" onclick="next('casa')">🧼 Produtos para casa</button>
-    <button class="btn" onclick="next('bebidas')">🍺 Bebidas e lazer</button>
+      <h1>💰 Vamos economizar hoje?</h1>
+      <p class="sub">Responda rápido e ganhe desconto agora.</p>
+
+      <button class="btn" onclick="next()">🛒 Compras do mês</button>
+      <button class="btn" onclick="next()">🍖 Carnes e promoções</button>
+      <button class="btn" onclick="next()">🧼 Produtos para casa</button>
+      <button class="btn" onclick="next()">🍺 Bebidas e lazer</button>
+    </div>
+
+    <div class="right">
+      <img src="atakarejo.png" style="width: 70%; opacity: 0.1;">
+    </div>
+
   </div>
 
   <!-- QUIZ 2 -->
-  <div id="quiz2" class="card">
-    <img src="atakarejo.png" class="logo-img">
+  <div id="quiz2" class="main">
 
-    <div class="badge">Só mais uma pergunta</div>
-    <h1>🔥 O que você quer agora?</h1>
-    <p class="sub">Escolha sua vantagem e desbloqueie sua oferta.</p>
+    <div class="left">
+      <img class="logo" src="atakarejo.png">
 
-    <button class="btn" onclick="finalizar()">💸 Pagar mais barato</button>
-    <button class="btn" onclick="finalizar()">🎁 Ver ofertas especiais</button>
+      <h1>🔥 O que você quer agora?</h1>
+      <p class="sub">Escolha sua vantagem.</p>
+
+      <button class="btn" onclick="finalizar()">💸 Pagar mais barato</button>
+      <button class="btn" onclick="finalizar()">🎁 Ver ofertas</button>
+    </div>
+
   </div>
 
   <!-- RESULTADO -->
-  <div id="resultado" class="card">
-    <img src="atakarejo.png" class="logo-img">
+  <div id="resultado" class="main">
 
-    <div class="badge">Desconto liberado</div>
-    <h1>🎉 Oferta desbloqueada!</h1>
-    <p class="sub">Escaneie o QR Code abaixo e aproveite agora.</p>
+    <div class="left">
+      <img class="logo" src="atakarejo.png">
 
-    <div id="qrcode" class="qr-box"></div>
+      <h1>🎉 Oferta desbloqueada!</h1>
+      <p class="sub">Escaneie o QR Code ao lado.</p>
 
-    <p class="timer">📲 Aponte a câmera do celular</p>
-    <p class="timer">⏳ Oferta válida por tempo limitado</p>
+      <!-- 🔥 TIMER VISÍVEL -->
+      <div id="timer" class="timer">⏳ 30s</div>
+    </div>
+
+    <div class="right">
+      <div id="qrcode" class="qr-box"></div>
+    </div>
+
   </div>
 
 </div>
@@ -162,33 +155,40 @@ h1 {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-let escolha = "";
-
-function next(valor) {
-  escolha = valor;
-
+function next() {
   document.getElementById("quiz1").style.display = "none";
-  document.getElementById("quiz2").style.display = "block";
+  document.getElementById("quiz2").style.display = "flex";
 }
 
 function finalizar() {
   document.getElementById("quiz2").style.display = "none";
-  document.getElementById("resultado").style.display = "block";
-
-  const link = "https://www.atakarejo.com.br/";
+  document.getElementById("resultado").style.display = "flex";
 
   document.getElementById("qrcode").innerHTML = "";
 
   new QRCode(document.getElementById("qrcode"), {
-    text: link,
-    width: 180,
-    height: 180,
-    correctLevel: QRCode.CorrectLevel.H
+    text: "https://www.atakarejo.com.br/",
+    width: 260,
+    height: 260
   });
 
-  setTimeout(() => {
-    location.reload();
-  }, 20000);
+  iniciarTimer();
+}
+
+/* 🔥 CONTADOR */
+function iniciarTimer() {
+  let tempo = 30;
+  const el = document.getElementById("timer");
+
+  const intervalo = setInterval(() => {
+    tempo--;
+    el.innerHTML = "⏳ " + tempo + "s";
+
+    if (tempo <= 0) {
+      clearInterval(intervalo);
+      location.reload();
+    }
+  }, 1000);
 }
 </script>
 
