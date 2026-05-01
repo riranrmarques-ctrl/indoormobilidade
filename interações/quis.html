@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promoção BK</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #2b0800, #8b1e00 55%, #ff8c00);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.10);
+  padding: 28px 22px;
+  border-radius: 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.38);
+  border: 1px solid rgba(255,255,255,0.16);
+}
+
+.logo {
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #fff3d6;
+  color: #7a2200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.16);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+
+.sub {
+  opacity: 0.85;
+  font-size: 15px;
+  margin: 0 0 26px;
+  line-height: 1.5;
+}
+
+.btn {
+  width: 100%;
+  padding: 17px;
+  margin: 10px 0;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  backdrop-filter: blur(10px);
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: scale(1.03);
+  background: #ffcc00;
+  color: #4a1500;
+}
+
+.cta {
+  background: #ffcc00;
+  color: #4a1500;
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.timer {
+  margin-top: 18px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+#quiz2,
+#resultado {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="quiz1" class="card">
+    <div class="logo">BK</div>
+    <div class="badge">Oferta exclusiva no carro</div>
+
+    <h1>🍔 Bateu aquela fome?</h1>
+    <p class="sub">Responda rapidinho e desbloqueie uma promoção especial do BK.</p>
+
+    <button class="btn" onclick="next('whopper')">🍔 Quero um Whopper</button>
+    <button class="btn" onclick="next('combo')">🍟 Quero um combo completo</button>
+    <button class="btn" onclick="next('sobremesa')">🍦 Quero sobremesa</button>
+    <button class="btn" onclick="next('cupom')">🎁 Quero cupom de desconto</button>
+  </div>
+
+  <div id="quiz2" class="card">
+    <div class="logo">BK</div>
+    <div class="badge">Só mais uma pergunta</div>
+
+    <h1>🔥 Qual vantagem combina com você?</h1>
+    <p class="sub">Escolha sua oferta e libere o acesso agora.</p>
+
+    <button class="btn" onclick="finalizar()">💸 Desconto no pedido</button>
+    <button class="btn" onclick="finalizar()">🍔 Oferta de combo</button>
+    <button class="btn" onclick="finalizar()">🎁 Cupom especial</button>
+  </div>
+
+  <div id="resultado" class="card">
+    <div class="logo">BK</div>
+    <div class="badge">Promoção liberada</div>
+
+    <h1>🎉 Sua oferta BK foi desbloqueada!</h1>
+    <p class="sub">Acesse agora e aproveite sua promoção antes que acabe.</p>
+
+    <a id="linkFinal" href="#" target="_blank">
+      <button class="btn cta">Acessar promoção BK agora</button>
+    </a>
+
+    <p class="timer">⏳ Promoção válida por tempo limitado</p>
+  </div>
+
+</div>
+
+<script>
+let escolha = "";
+
+function next(valor) {
+  escolha = valor;
+
+  document.getElementById("quiz1").style.display = "none";
+  document.getElementById("quiz2").style.display = "block";
+}
+
+function finalizar() {
+  document.getElementById("quiz2").style.display = "none";
+  document.getElementById("resultado").style.display = "block";
+
+  // Troque este link pelo link real da campanha do BK
+  const link = "https://www.burgerking.com.br/";
+
+  document.getElementById("linkFinal").href = link;
+
+  // Depois de 20 segundos, volta para o começo
+  setTimeout(() => {
+    location.reload();
+  }, 20000);
+}
+</script>
+
+</body>
+</html>
