@@ -22,7 +22,10 @@ const generalButton = document.querySelector("#generalButton");
 const createFolderButton = document.querySelector("#createFolderButton");
 const playlistHeader = document.querySelector("#playlistHeader");
 const playlistList = document.querySelector("#playlistList");
+
 const addMediaButton = document.querySelector("#addMediaButton");
+const editVehicleButton = document.querySelector("#editVehicleButton");
+const deleteVehicleButton = document.querySelector("#deleteVehicleButton");
 
 document.addEventListener("DOMContentLoaded", iniciarPagina);
 
@@ -31,6 +34,8 @@ async function iniciarPagina() {
 
   folderHeaderBackButton?.addEventListener("click", closeFolderPage);
   addMediaButton?.addEventListener("click", adicionarMidia);
+  editVehicleButton?.addEventListener("click", editarPasta);
+  deleteVehicleButton?.addEventListener("click", excluirPasta);
   detailCode?.addEventListener("click", () => copyCode(detailCode));
 }
 
@@ -41,8 +46,8 @@ async function carregarVeiculos() {
     .order("nome", { ascending: true });
 
   if (error) {
-    console.error("Erro ao carregar veiculos:", error);
-    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar dados.</p>`;
+    console.error(error);
+    folderGrid.innerHTML = `<p class="playlist-empty">Erro ao carregar veículos.</p>`;
     return;
   }
 
@@ -59,10 +64,7 @@ function renderizarPastas() {
   }
 
   veiculos.forEach((item) => {
-    const statusBanco = String(item.status || "ativo").toLowerCase();
-    const ativo = statusBanco !== "inativo";
-    const statusTexto = ativo ? "Ativo" : "Inativo";
-    const statusClasse = ativo ? "active" : "inactive";
+    const ativo = String(item.status || "ativo").toLowerCase() !== "inativo";
 
     const card = document.createElement("article");
     card.className = "folder-card";
@@ -70,8 +72,8 @@ function renderizarPastas() {
     card.innerHTML = `
       <div class="status-line">
         <span>
-          <span class="status-dot ${statusClasse}"></span>
-          <strong>${statusTexto}</strong>
+          <span class="status-dot ${ativo ? "active" : "inactive"}"></span>
+          <strong>${ativo ? "Ativo" : "Inativo"}</strong>
         </span>
         <button class="copy-code" type="button" data-code="${item.codigo}">
           ${item.codigo}
@@ -85,28 +87,18 @@ function renderizarPastas() {
       <h2>${item.nome}</h2>
 
       <div class="folder-stats">
-        <span>
-          <small>Veiculos</small>
-          <strong>${item.veiculos_vinculados || 0}</strong>
-        </span>
-        <span>
-          <small>Zona</small>
-          <strong>${formatarArea(item.zona_area)}</strong>
-        </span>
+        <span><small>Veículos</small><strong>${item.veiculos_vinculados || 0}</strong></span>
+        <span><small>Zona</small><strong>${formatarArea(item.zona_area)}</strong></span>
       </div>
 
       <button class="open-folder" type="button" data-code="${item.codigo}">
-        Abrir pagina
+        Abrir página
       </button>
     `;
 
     folderGrid.appendChild(card);
   });
 
-  ativarEventosPastas();
-}
-
-function ativarEventosPastas() {
   document.querySelectorAll(".copy-code").forEach((button) => {
     button.addEventListener("click", () => copyCode(button));
   });
@@ -137,7 +129,7 @@ async function abrirPasta(codigo) {
 
   pastaAberta = data;
 
-  detailTitle.textContent = "BAIRRO DA CIDADE";
+  detailTitle.textContent = data.nome || "BAIRRO DA CIDADE";
   detailDistrict.textContent = formatarArea(data.zona_area);
   detailCode.textContent = data.codigo;
   detailCode.dataset.code = data.codigo;
@@ -145,12 +137,7 @@ async function abrirPasta(codigo) {
   detailCampaigns.textContent = data.campanhas_ativas || 0;
   detailQuizzes.textContent = formatarNumero(data.quiz_interacao || 0);
 
-  if (data.mapa_url) {
-    detailMapImage.src = data.mapa_url;
-  } else {
-    detailMapImage.src = "mapa-salvador.png";
-  }
-
+  detailMapImage.src = data.mapa_url || data.imagem_url || "mapa-salvador.png";
   openedFolderLabel.textContent = `Pasta aberta: ${data.nome}`;
 
   generalButton.classList.add("is-hidden");
@@ -161,11 +148,6 @@ async function abrirPasta(codigo) {
   folderPage.classList.remove("is-hidden");
 
   await carregarPlaylist(data.codigo);
-
-  folderPage.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest",
-  });
 }
 
 async function carregarPlaylist(codigo) {
@@ -178,7 +160,7 @@ async function carregarPlaylist(codigo) {
     .order("ordem", { ascending: true });
 
   if (error) {
-    console.error("Erro ao carregar playlist:", error);
+    console.error(error);
     playlistList.innerHTML = `<p class="playlist-empty">Erro ao carregar playlist.</p>`;
     return;
   }
@@ -199,7 +181,7 @@ async function carregarPlaylist(codigo) {
       <strong>${index + 1}.</strong>
 
       <p>
-        ${item.nome_arquivo || item.nome || item.link_url || "Midia sem nome"}
+        ${item.nome_arquivo || item.nome || item.link_url || "Mídia sem nome"}
         <small style="display:block;opacity:.65;text-transform:uppercase;margin-top:4px;">
           ${item.tipo || "video"}
         </small>
@@ -223,7 +205,6 @@ async function adicionarMidia() {
   }
 
   const tipo = prompt("Tipo da mídia: video, imagem, noticia ou quiz");
-
   if (!tipo) return;
 
   const tipoLimpo = tipo.trim().toLowerCase();
@@ -236,26 +217,54 @@ async function adicionarMidia() {
   const nome = prompt("Nome da mídia:");
   if (!nome) return;
 
-  let linkUrl = null;
-  let arquivoUrl = null;
-  let storagePath = null;
-  let nomeArquivo = nome;
+  let arquivo_url = null;
+  let storage_path = null;
+  let link_url = null;
+  let nome_arquivo = nome;
 
-  if (tipoLimpo === "noticia" || tipoLimpo === "quiz") {
-    linkUrl = prompt("Cole a URL que vai abrir:");
-    if (!linkUrl) return;
-  } else {
-    alert("Na próxima etapa vamos ligar o botão ao upload real do arquivo no Storage. Agora ele salva o item no banco.");
+  if (tipoLimpo === "video" || tipoLimpo === "imagem") {
+    const file = await escolherArquivo(tipoLimpo);
+    if (!file) return;
+
+    const extensao = file.name.split(".").pop();
+    const nomeSeguro = limparNomeArquivo(nome);
+    const caminho = `${pastaAberta.codigo}/${Date.now()}_${nomeSeguro}.${extensao}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("playlist-media")
+      .upload(caminho, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error(uploadError);
+      alert("Erro ao enviar arquivo para o Storage. Verifique se você está logado e se as políticas estão liberadas.");
+      return;
+    }
+
+    const { data: publicData } = supabaseClient.storage
+      .from("playlist-media")
+      .getPublicUrl(caminho);
+
+    arquivo_url = publicData.publicUrl;
+    storage_path = caminho;
+    nome_arquivo = file.name;
   }
 
-  const { data: playlistAtual } = await supabaseClient
+  if (tipoLimpo === "noticia" || tipoLimpo === "quiz") {
+    link_url = prompt("Cole a URL que vai abrir:");
+    if (!link_url) return;
+  }
+
+  const { data: ultima } = await supabaseClient
     .from("playlist_veiculos")
     .select("ordem")
     .eq("codigo", pastaAberta.codigo)
     .order("ordem", { ascending: false })
     .limit(1);
 
-  const proximaOrdem = playlistAtual?.length ? Number(playlistAtual[0].ordem) + 1 : 1;
+  const ordem = ultima?.length ? Number(ultima[0].ordem) + 1 : 1;
 
   const { error } = await supabaseClient
     .from("playlist_veiculos")
@@ -263,22 +272,135 @@ async function adicionarMidia() {
       codigo: pastaAberta.codigo,
       nome,
       tipo: tipoLimpo,
-      nome_arquivo: nomeArquivo,
-      arquivo_url: arquivoUrl,
-      storage_path: storagePath,
-      link_url: linkUrl,
-      ordem: proximaOrdem,
+      nome_arquivo,
+      arquivo_url,
+      storage_path,
+      link_url,
+      ordem,
       ativo: true,
       duracao: tipoLimpo === "video" ? null : 10,
     });
 
   if (error) {
-    console.error("Erro ao adicionar mídia:", error);
-    alert("Erro ao adicionar mídia.");
+    console.error(error);
+    alert("Erro ao salvar mídia no banco.");
     return;
   }
 
   await carregarPlaylist(pastaAberta.codigo);
+}
+
+async function editarPasta() {
+  if (!pastaAberta) return;
+
+  const novoNome = prompt("Nome do bairro/pasta:", pastaAberta.nome || "");
+  if (!novoNome) return;
+
+  const novoStatus = prompt("Status: ativo ou inativo", pastaAberta.status || "ativo") || pastaAberta.status;
+  const novosVeiculos = prompt("Veículos vinculados:", pastaAberta.veiculos_vinculados || 0);
+  const novaZona = prompt("Zona de área:", pastaAberta.zona_area || 0);
+  const novasCampanhas = prompt("Campanhas ativas:", pastaAberta.campanhas_ativas || 0);
+  const novosQuizzes = prompt("Quiz interação:", pastaAberta.quiz_interacao || 0);
+
+  let imagem_url = pastaAberta.imagem_url || null;
+  let imagem_path = pastaAberta.imagem_path || null;
+
+  const trocarImagem = confirm("Deseja trocar a imagem/mapa desta pasta?");
+
+  if (trocarImagem) {
+    const file = await escolherArquivo("imagem");
+    if (file) {
+      const extensao = file.name.split(".").pop();
+      const caminho = `${pastaAberta.codigo}/capa_${Date.now()}.${extensao}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from("playlist-media")
+        .upload(caminho, file, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.error(uploadError);
+        alert("Erro ao enviar imagem.");
+        return;
+      }
+
+      const { data: publicData } = supabaseClient.storage
+        .from("playlist-media")
+        .getPublicUrl(caminho);
+
+      imagem_url = publicData.publicUrl;
+      imagem_path = caminho;
+    }
+  }
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .update({
+      nome: novoNome,
+      status: novoStatus,
+      veiculos_vinculados: Number(novosVeiculos) || 0,
+      zona_area: converterNumero(novaZona),
+      campanhas_ativas: Number(novasCampanhas) || 0,
+      quiz_interacao: Number(String(novosQuizzes).replace(/\D/g, "")) || 0,
+      imagem_url,
+      imagem_path,
+      mapa_url: imagem_url,
+      mapa_path: imagem_path,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq("codigo", pastaAberta.codigo);
+
+  if (error) {
+    console.error(error);
+    alert("Erro ao editar pasta.");
+    return;
+  }
+
+  await carregarVeiculos();
+  await abrirPasta(pastaAberta.codigo);
+}
+
+async function excluirPasta() {
+  if (!pastaAberta) return;
+
+  const confirmar = confirm(`Deseja excluir a pasta ${pastaAberta.nome} e toda a playlist dela?`);
+  if (!confirmar) return;
+
+  const { data: midias } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("storage_path")
+    .eq("codigo", pastaAberta.codigo);
+
+  const arquivos = (midias || [])
+    .map((item) => item.storage_path)
+    .filter(Boolean);
+
+  if (arquivos.length) {
+    await supabaseClient.storage
+      .from("playlist-media")
+      .remove(arquivos);
+  }
+
+  await supabaseClient
+    .from("playlist_veiculos")
+    .delete()
+    .eq("codigo", pastaAberta.codigo);
+
+  const { error } = await supabaseClient
+    .from("veiculos")
+    .delete()
+    .eq("codigo", pastaAberta.codigo);
+
+  if (error) {
+    console.error(error);
+    alert("Erro ao excluir pasta.");
+    return;
+  }
+
+  closeFolderPage();
+  await carregarVeiculos();
 }
 
 async function abrirMidia(id) {
@@ -288,17 +410,11 @@ async function abrirMidia(id) {
     .eq("id", id)
     .single();
 
-  if (error || !data) {
-    alert("Erro ao abrir mídia.");
-    return;
-  }
+  if (error || !data) return alert("Erro ao abrir mídia.");
 
   const url = data.arquivo_url || data.video_url || data.link_url;
 
-  if (!url) {
-    alert("Esta mídia ainda não tem URL.");
-    return;
-  }
+  if (!url) return alert("Esta mídia ainda não tem URL.");
 
   window.open(url, "_blank");
 }
@@ -317,19 +433,29 @@ async function editarMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao editar mídia:", error);
+    console.error(error);
     alert("Erro ao editar mídia.");
     return;
   }
 
-  if (pastaAberta) {
-    await carregarPlaylist(pastaAberta.codigo);
-  }
+  await carregarPlaylist(pastaAberta.codigo);
 }
 
 async function excluirMidia(id) {
-  const confirmar = confirm("Deseja excluir esta mídia da playlist?");
+  const confirmar = confirm("Deseja excluir esta mídia?");
   if (!confirmar) return;
+
+  const { data: midia } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("storage_path")
+    .eq("id", id)
+    .single();
+
+  if (midia?.storage_path) {
+    await supabaseClient.storage
+      .from("playlist-media")
+      .remove([midia.storage_path]);
+  }
 
   const { error } = await supabaseClient
     .from("playlist_veiculos")
@@ -337,14 +463,28 @@ async function excluirMidia(id) {
     .eq("id", id);
 
   if (error) {
-    console.error("Erro ao excluir mídia:", error);
+    console.error(error);
     alert("Erro ao excluir mídia.");
     return;
   }
 
-  if (pastaAberta) {
-    await carregarPlaylist(pastaAberta.codigo);
-  }
+  await carregarPlaylist(pastaAberta.codigo);
+}
+
+function escolherArquivo(tipo) {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+
+    if (tipo === "video") {
+      input.accept = "video/mp4,video/webm";
+    } else {
+      input.accept = "image/jpeg,image/jpg,image/png,image/webp";
+    }
+
+    input.onchange = () => resolve(input.files[0] || null);
+    input.click();
+  });
 }
 
 function closeFolderPage() {
@@ -356,11 +496,18 @@ function closeFolderPage() {
   createFolderButton.classList.remove("is-hidden");
   folderHeaderBackButton.classList.add("is-hidden");
   playlistHeader.classList.remove("is-folder-context");
+}
 
-  folderGrid.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
+function limparNomeArquivo(nome) {
+  return String(nome)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "_")
+    .toLowerCase();
+}
+
+function converterNumero(valor) {
+  return Number(String(valor).replace(",", ".")) || 0;
 }
 
 function formatarArea(valor) {
@@ -369,5 +516,5 @@ function formatarArea(valor) {
 }
 
 function formatarNumero(valor) {
-  return Number(valor).toLocaleString("pt-BR");
+  return Number(valor || 0).toLocaleString("pt-BR");
 }
