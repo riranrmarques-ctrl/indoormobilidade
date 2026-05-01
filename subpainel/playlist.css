@@ -383,21 +383,16 @@ dd {
 
 .detail-card-head {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto;
   gap: 16px;
   align-items: center;
 }
 
-.detail-card-head > strong {
-  color: #c5d3e0;
-  font-size: 1.05rem;
-}
-
 .detail-layout {
   display: grid;
-  grid-template-columns: 0.7fr minmax(520px, 1.3fr);
+  grid-template-columns: 0.54fr minmax(560px, 1.46fr);
   gap: 36px;
-  align-items: center;
+  align-items: start;
 }
 
 .detail-media-panel {
@@ -409,7 +404,7 @@ dd {
 }
 
 .detail-media {
-  width: min(100%, 760px);
+  width: min(100%, 920px);
   aspect-ratio: 16 / 9;
   height: auto;
   overflow: hidden;
@@ -427,7 +422,7 @@ dd {
 
 .detail-info h2 {
   margin: 8px 0 10px;
-  font-size: clamp(2rem, 3.4vw, 3.8rem);
+  font-size: clamp(1.9rem, 3.1vw, 3.45rem);
   line-height: 1;
   letter-spacing: 0;
 }
