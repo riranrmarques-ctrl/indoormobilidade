@@ -310,16 +310,31 @@ p {
   border: 1px solid rgba(101, 142, 180, 0.16);
   border-radius: var(--radius);
   overflow: hidden;
+  background: #091827;
+}
+
+.map-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.95) contrast(0.92) brightness(0.72);
+}
+
+.city-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background:
-    linear-gradient(35deg, transparent 48%, rgba(101, 142, 180, 0.09) 49%, transparent 50%),
-    linear-gradient(120deg, transparent 46%, rgba(101, 142, 180, 0.11) 47%, transparent 49%),
-    radial-gradient(circle at 38% 56%, rgba(0, 224, 135, 0.2), transparent 16%),
-    #091827;
-  background-size: 58px 58px, 72px 72px, auto, auto;
+    linear-gradient(180deg, rgba(7, 21, 34, 0.05), rgba(7, 21, 34, 0.38)),
+    radial-gradient(circle at 35% 64%, rgba(0, 224, 135, 0.22), transparent 18%);
+  pointer-events: none;
 }
 
 .route {
   position: absolute;
+  z-index: 1;
   height: 2px;
   border-radius: 999px;
   background: rgba(0, 224, 135, 0.45);
@@ -342,6 +357,7 @@ p {
 
 .car-point {
   position: absolute;
+  z-index: 2;
   left: var(--x);
   top: var(--y);
   width: 30px;
@@ -492,6 +508,31 @@ td {
   vertical-align: middle;
   border-radius: 50%;
   background: linear-gradient(135deg, #ff453a, #ffd60a);
+}
+
+.brand-dot.burger,
+.schedule-thumb.burger {
+  background: linear-gradient(135deg, #ff7a18, #ffcc33);
+}
+
+.brand-dot.coke,
+.schedule-thumb.coke {
+  background: linear-gradient(135deg, #e60012, #ff5a5f);
+}
+
+.brand-dot.mcd,
+.schedule-thumb.mcd {
+  background: linear-gradient(135deg, #ffcc00, #da291c);
+}
+
+.brand-dot.netflix,
+.schedule-thumb.netflix {
+  background: linear-gradient(135deg, #e50914, #111111);
+}
+
+.brand-dot.ifood,
+.schedule-thumb.ifood {
+  background: linear-gradient(135deg, #ea1d2c, #ff6b6b);
 }
 
 mark {
