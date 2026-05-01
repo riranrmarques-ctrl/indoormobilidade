@@ -33,19 +33,10 @@ body {
   border: 1px solid rgba(255,255,255,0.16);
 }
 
-.logo {
-  width: 86px;
-  height: 86px;
-  margin: 0 auto 14px;
-  border-radius: 50%;
-  background: #fff3d6;
-  color: #7a2200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+.logo-img {
+  width: 120px;
+  margin: 0 auto 16px;
+  display: block;
 }
 
 .badge {
@@ -61,14 +52,12 @@ body {
 h1 {
   font-size: 28px;
   margin: 0 0 12px;
-  line-height: 1.15;
 }
 
 .sub {
   opacity: 0.85;
   font-size: 15px;
   margin: 0 0 26px;
-  line-height: 1.5;
 }
 
 .btn {
@@ -80,8 +69,6 @@ h1 {
   font-size: 16px;
   background: rgba(255,255,255,0.12);
   color: white;
-  backdrop-filter: blur(10px);
-  transition: 0.2s ease;
   cursor: pointer;
 }
 
@@ -91,17 +78,28 @@ h1 {
   color: #4a1500;
 }
 
-.cta {
-  background: #ffcc00;
-  color: #4a1500;
-  font-weight: 900;
-  font-size: 17px;
-}
-
 .timer {
   margin-top: 18px;
   font-size: 13px;
   opacity: 0.8;
+}
+
+/* 🔥 CENTRALIZAÇÃO REAL */
+.qr-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* força centralização mesmo no WebView */
+.qr-box canvas,
+.qr-box img {
+  display: block !important;
+  margin: 0 auto !important;
+  background: #fff;
+  padding: 10px;
+  border-radius: 12px;
 }
 
 #quiz2,
@@ -115,55 +113,63 @@ h1 {
 
 <div class="container">
 
+  <!-- QUIZ 1 -->
   <div id="quiz1" class="card">
-    <div class="logo">BK</div>
+
+    <!-- 🔥 LOGO EMBUTIDA -->
+    <img class="logo-img"
+    src="data:image/png;base64,COLE_AQUI_BASE64_DA_SUA_LOGO">
+
     <div class="badge">Oferta exclusiva no carro</div>
 
     <h1>🍔 Bateu aquela fome?</h1>
     <p class="sub">Responda rapidinho e desbloqueie uma promoção especial do BK.</p>
 
-    <button class="btn" onclick="next('whopper')">🍔 Quero um Whopper</button>
-    <button class="btn" onclick="next('combo')">🍟 Quero um combo completo</button>
-    <button class="btn" onclick="next('sobremesa')">🍦 Quero sobremesa</button>
-    <button class="btn" onclick="next('cupom')">🎁 Quero cupom de desconto</button>
+    <button class="btn" onclick="next()">🍔 Quero um Whopper</button>
+    <button class="btn" onclick="next()">🍟 Quero um combo completo</button>
+    <button class="btn" onclick="next()">🍦 Quero sobremesa</button>
+    <button class="btn" onclick="next()">🎁 Quero cupom</button>
   </div>
 
+  <!-- QUIZ 2 -->
   <div id="quiz2" class="card">
-    <div class="logo">BK</div>
+
+    <img class="logo-img"
+    src="data:image/png;base64,COLE_AQUI_BASE64_DA_SUA_LOGO">
+
     <div class="badge">Só mais uma pergunta</div>
 
     <h1>🔥 Qual vantagem combina com você?</h1>
     <p class="sub">Escolha sua oferta e libere o acesso agora.</p>
 
-    <button class="btn" onclick="finalizar()">💸 Desconto no pedido</button>
-    <button class="btn" onclick="finalizar()">🍔 Oferta de combo</button>
-    <button class="btn" onclick="finalizar()">🎁 Cupom especial</button>
+    <button class="btn" onclick="finalizar()">💸 Desconto</button>
+    <button class="btn" onclick="finalizar()">🍔 Combo</button>
+    <button class="btn" onclick="finalizar()">🎁 Cupom</button>
   </div>
 
+  <!-- RESULTADO -->
   <div id="resultado" class="card">
-    <div class="logo">BK</div>
+
+    <img class="logo-img"
+    src="data:image/png;base64,COLE_AQUI_BASE64_DA_SUA_LOGO">
+
     <div class="badge">Promoção liberada</div>
 
-    <h1>🎉 Sua oferta BK foi desbloqueada!</h1>
+    <h1>🎉 Oferta desbloqueada!</h1>
     <p class="sub">Escaneie o QR Code abaixo e aproveite agora.</p>
 
-    <div id="qrcode" style="margin:20px auto;"></div>
+    <div id="qrcode" class="qr-box"></div>
 
     <p class="timer">📲 Aponte a câmera do celular</p>
-    <p class="timer">⏳ Promoção válida por tempo limitado</p>
+    <p class="timer">⏳ Tempo limitado</p>
   </div>
 
 </div>
 
-<!-- Biblioteca QR Code -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-let escolha = "";
-
-function next(valor) {
-  escolha = valor;
-
+function next() {
   document.getElementById("quiz1").style.display = "none";
   document.getElementById("quiz2").style.display = "block";
 }
@@ -172,22 +178,15 @@ function finalizar() {
   document.getElementById("quiz2").style.display = "none";
   document.getElementById("resultado").style.display = "block";
 
-  const link = "https://www.burgerking.com.br/";
-
   document.getElementById("qrcode").innerHTML = "";
 
   new QRCode(document.getElementById("qrcode"), {
-    text: link,
+    text: "https://www.burgerking.com.br/",
     width: 180,
-    height: 180,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
+    height: 180
   });
 
-  setTimeout(() => {
-    location.reload();
-  }, 20000);
+  setTimeout(() => location.reload(), 20000);
 }
 </script>
 
