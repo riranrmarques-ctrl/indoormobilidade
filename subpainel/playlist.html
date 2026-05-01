@@ -9,7 +9,7 @@
   </head>
   <body>
     <main class="playlist-shell">
-      <header class="playlist-header">
+      <header class="playlist-header" id="playlistHeader">
         <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
 
         <div class="header-title">
@@ -144,10 +144,6 @@
           <div class="detail-card-head">
             <button class="back-to-folders" id="backToFolders" type="button">← Voltar</button>
             <strong>Gerencie e organize a playlist desta area</strong>
-            <div class="opened-folder-status">
-              <span id="openedFolderLabel">Pasta aberta: Barra</span>
-              <strong id="openedFolderStatus">Ativa</strong>
-            </div>
           </div>
 
           <div class="detail-layout">
@@ -163,7 +159,7 @@
               <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
 
               <dl>
-                <div><dt>Zona de Area</dt><dd id="detailDistrict">Barra</dd></div>
+                <div><dt>Zona de Area</dt><dd id="detailDistrict">7,4 km²</dd></div>
                 <div><dt>Veiculos vinculados</dt><dd id="detailVehicles">38</dd></div>
               </dl>
 
@@ -216,6 +212,11 @@
             </div>
           </div>
         </section>
+
+        <div class="opened-folder-status" aria-label="Pasta aberta">
+          <span id="openedFolderLabel">Pasta aberta: Barra</span>
+          <button class="copy-code floating-code" id="openedFolderStatus" type="button" data-code="H4D3">H4D3</button>
+        </div>
       </section>
     </main>
   </body>
