@@ -534,8 +534,9 @@ dd {
 }
 
 .file-actions button {
-  width: 42px;
+  min-width: 62px;
   height: 42px;
+  padding: 0 10px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
 }
