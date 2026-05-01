@@ -126,6 +126,9 @@ h1 {
 }
 
 .delete-page {
+  width: fit-content;
+  min-width: 150px;
+  justify-self: end;
   background: var(--red);
   color: #fff;
 }
@@ -347,6 +350,21 @@ dd {
   font-weight: 900;
 }
 
+.opened-folder-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--green);
+  font-weight: 900;
+}
+
+.opened-folder-status strong {
+  padding: 7px 10px;
+  border: 1px solid rgba(0, 224, 135, 0.28);
+  border-radius: 999px;
+  background: rgba(0, 224, 135, 0.11);
+}
+
 .folder-detail {
   padding: 22px;
   display: grid;
@@ -372,6 +390,13 @@ dd {
 .detail-info h2 {
   margin: 8px 0 10px;
   font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.detail-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .detail-actions {
