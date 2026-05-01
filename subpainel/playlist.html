@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>playlist | drivvio</title>
 
   <link rel="stylesheet" href="playlist.css" />
@@ -15,156 +14,104 @@
 <body>
   <main class="playlist-shell">
     <header class="playlist-header" id="playlistHeader">
-      <a class="back-button" id="generalButton" href="painel-central.html">
-        ← Geral
-      </a>
-
-      <button class="back-button is-hidden" id="folderHeaderBackButton" type="button">
-        ← Voltar
-      </button>
+      <a class="back-button" id="generalButton" href="painel-central.html">← Geral</a>
 
       <div class="header-title">
         <img class="brand-logo" src="../logo.png" onerror="this.onerror=null; this.src='logo.png';" alt="drivvio" />
         <div>
-          <span class="eyebrow">Gestão da playlist</span>
-          <h1>Veículos Indoor</h1>
-          <p id="openedFolderLabel">Gerencie as pastas e campanhas dos veículos.</p>
+          <span class="eyebrow">Gestao da playlists</span>
+          <h1>Veiculos Indoor</h1>
+          <p>Gerencie as playlist e informacoes por bairro.</p>
         </div>
       </div>
 
-      <button class="primary-button" id="createFolderButton" type="button">
-        + Nova pasta
-      </button>
+      <button class="create-folder" id="createFolderButton" type="button">+ Criar nova pasta</button>
+      <button class="header-return is-hidden" id="folderHeaderBackButton" type="button">← Voltar</button>
     </header>
 
-    <section class="folder-grid" id="folderGrid"></section>
+    <section class="folder-grid" id="folderGrid" aria-label="Pastas por bairro"></section>
 
-    <section class="folder-page is-hidden" id="folderPage">
-      <section class="folder-detail">
-        <div class="folder-map">
-          <img id="detailMapImage" alt="Imagem da pasta" />
-        </div>
+    <section class="folder-page is-hidden" id="folderPage" aria-label="Pagina da playlist aberta">
+      <section class="folder-detail" id="folderDetail" aria-label="Detalhes da pasta">
+        <div class="detail-layout">
+          <div class="detail-info">
+            <div class="detail-topline">
+              <span class="eyebrow">pagina aberta</span>
+              <button class="copy-code detail-code" id="detailCode" type="button" data-code="">----</button>
+            </div>
 
-        <div class="folder-info">
-          <span class="eyebrow">Pasta aberta</span>
-          <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
+            <h2 id="detailTitle">BAIRRO DA CIDADE</h2>
 
-          <div class="detail-line">
-            <span>Zona</span>
-            <strong id="detailDistrict">0 km2</strong>
+            <dl class="detail-metrics">
+              <div>
+                <dt>Zona de Area</dt>
+                <dd id="detailDistrict">0 km2</dd>
+              </div>
+              <div>
+                <dt>Veiculos vinculados</dt>
+                <dd id="detailVehicles">0</dd>
+              </div>
+              <div>
+                <dt>Campanhas ativas</dt>
+                <dd id="detailCampaigns">0</dd>
+              </div>
+              <div>
+                <dt>Quiz interacao</dt>
+                <dd id="detailQuizzes">0</dd>
+              </div>
+            </dl>
+
+            <div class="detail-actions">
+              <button id="editVehicleButton" type="button">Editar</button>
+              <button id="deleteVehicleButton" class="danger-action" type="button">Excluir</button>
+            </div>
           </div>
 
-          <div class="detail-line">
-            <span>Código</span>
-            <button id="detailCode" class="copy-code" type="button" data-code="">---</button>
-          </div>
-
-          <div class="detail-stats">
-            <article>
-              <small>Veículos</small>
-              <strong id="detailVehicles">0</strong>
-            </article>
-
-            <article>
-              <small>Campanhas</small>
-              <strong id="detailCampaigns">0</strong>
-            </article>
-
-            <article>
-              <small>Quiz / QR</small>
-              <strong id="detailQuizzes">0</strong>
-            </article>
-          </div>
-
-          <div class="detail-actions">
-            <button id="addMediaButton" type="button">+ Adicionar mídia</button>
-            <button id="editVehicleButton" type="button">Editar pasta</button>
-            <button id="deleteVehicleButton" type="button" class="danger">Excluir pasta</button>
+          <div class="detail-media-panel">
+            <div class="detail-media">
+              <img id="detailMapImage" alt="Imagem da pasta" style="display:none;" />
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="playlist-panel">
-        <div class="playlist-panel-header">
+      <section class="playlist-table" aria-label="Playlist ativa">
+        <div class="section-head">
           <div>
-            <span class="eyebrow">Arquivos</span>
-            <h2>Playlist da pasta</h2>
+            <span class="eyebrow">conteudo da</span>
+            <h2>Playlists</h2>
           </div>
+
+          <button id="addMediaButton" type="button">Adicionar midia</button>
         </div>
 
-        <div class="playlist-list" id="playlistList"></div>
+        <div id="playlistList"></div>
       </section>
+
+      <div class="opened-folder-status" aria-label="Pasta aberta">
+        <span id="openedFolderLabel">Pasta aberta:</span>
+      </div>
     </section>
   </main>
+  <div id="editModal" class="modal is-hidden">
+  <div class="modal-content">
+    <h2>Editar Pasta</h2>
 
-  <!-- Modal editar pasta -->
-  <div class="modal is-hidden" id="editModal">
-    <div class="modal-box">
-      <h2>Editar pasta</h2>
+    <label>Nome do bairro</label>
+    <input type="text" id="editNome">
 
-      <label>
-        Nome da pasta
-        <input id="editNome" type="text" placeholder="Ex: Veículos Salvador" />
-      </label>
+    <label>Zona (km²)</label>
+    <input type="text" id="editZona">
 
-      <label>
-        Zona / Área
-        <input id="editZona" type="text" placeholder="Ex: 12.5" />
-      </label>
+    <label>Imagem / Mapa</label>
+    <input type="file" id="editImagem" accept="image/*">
 
-      <label>
-        Imagem / mapa da pasta
-        <input id="editImagem" type="file" accept="image/jpeg,image/jpg,image/png,image/webp" />
-      </label>
-
-      <div class="modal-actions">
-        <button id="cancelEdit" type="button">Cancelar</button>
-        <button id="saveEdit" type="button">Salvar</button>
-      </div>
+    <div class="modal-actions">
+      <button id="cancelEdit">Cancelar</button>
+      <button id="saveEdit">Salvar</button>
     </div>
   </div>
-
-  <!-- Modal adicionar mídia -->
-  <div class="modal is-hidden" id="uploadModal">
-    <div class="modal-box">
-      <h2>Adicionar mídia</h2>
-
-      <label>
-        Tipo da mídia
-        <select id="mediaTipo">
-          <option value="video">Vídeo</option>
-          <option value="imagem">Imagem</option>
-          <option value="noticia">Notícia / Link</option>
-          <option value="quiz">Quiz / QR Code</option>
-        </select>
-      </label>
-
-      <label>
-        Nome da mídia
-        <input id="mediaNome" type="text" placeholder="Ex: Campanha Atakarejo" />
-      </label>
-
-      <label id="mediaFileBox">
-        Arquivo
-        <input id="mediaFile" type="file" />
-      </label>
-
-      <label id="mediaLinkBox" class="is-hidden">
-        URL
-        <input id="mediaLink" type="url" placeholder="https://..." />
-      </label>
-
-      <div class="preview-box">
-        <img id="previewImage" alt="Preview da imagem" />
-        <video id="previewVideo" controls></video>
-        <p id="previewEmpty">Preview da mídia</p>
-      </div>
-
-      <div class="modal-actions">
-        <button id="cancelUpload" type="button">Cancelar</button>
-        <button id="confirmUpload" type="button">Salvar mídia</button>
-      </div>
-    </div>
-  </div>
+</div>
+  
 </body>
 </html>
