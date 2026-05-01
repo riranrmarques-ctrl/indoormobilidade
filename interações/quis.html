@@ -145,16 +145,18 @@ h1 {
     <div class="badge">Promoção liberada</div>
 
     <h1>🎉 Sua oferta BK foi desbloqueada!</h1>
-    <p class="sub">Acesse agora e aproveite sua promoção antes que acabe.</p>
+    <p class="sub">Escaneie o QR Code abaixo e aproveite agora.</p>
 
-    <a id="linkFinal" href="#" target="_blank">
-      <button class="btn cta">Acessar promoção BK agora</button>
-    </a>
+    <div id="qrcode" style="margin:20px auto;"></div>
 
+    <p class="timer">📲 Aponte a câmera do celular</p>
     <p class="timer">⏳ Promoção válida por tempo limitado</p>
   </div>
 
 </div>
+
+<!-- Biblioteca QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
 let escolha = "";
@@ -170,12 +172,19 @@ function finalizar() {
   document.getElementById("quiz2").style.display = "none";
   document.getElementById("resultado").style.display = "block";
 
-  // Troque este link pelo link real da campanha do BK
   const link = "https://www.burgerking.com.br/";
 
-  document.getElementById("linkFinal").href = link;
+  document.getElementById("qrcode").innerHTML = "";
 
-  // Depois de 20 segundos, volta para o começo
+  new QRCode(document.getElementById("qrcode"), {
+    text: link,
+    width: 180,
+    height: 180,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
   setTimeout(() => {
     location.reload();
   }, 20000);
