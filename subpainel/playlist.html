@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>playlist | drivvio</title>
 
-  <link rel="stylesheet" href="playlist.css" />
+  <link rel="stylesheet" href="playlist.css?v=3" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="playlist.js" defer></script>
+  <script src="playlist.js?v=3" defer></script>
 </head>
 
 <body>
@@ -93,25 +93,49 @@
       </div>
     </section>
   </main>
+
   <div id="editModal" class="modal is-hidden">
-  <div class="modal-content">
-    <h2>Editar Pasta</h2>
+    <div class="modal-content edit-modal-content">
+      <h2>Editar Pasta</h2>
 
-    <label>Nome do bairro</label>
-    <input type="text" id="editNome">
+      <label>Nome do bairro</label>
+      <input type="text" id="editNome">
 
-    <label>Zona (km²)</label>
-    <input type="text" id="editZona">
+      <label>Zona (km²)</label>
+      <input type="text" id="editZona">
 
-    <label>Imagem / Mapa</label>
-    <input type="file" id="editImagem" accept="image/*">
+      <label>Imagem da capa</label>
+      <input type="file" id="editImagem" accept="image/*">
 
-    <div class="modal-actions">
-      <button id="cancelEdit">Cancelar</button>
-      <button id="saveEdit">Salvar</button>
+      <div class="edit-preview-box">
+        <div class="edit-preview-frame">
+          <span id="editPreviewEmpty">Prévia da imagem</span>
+          <img id="editPreviewImage" alt="Prévia da capa" style="display:none;">
+        </div>
+
+        <div class="edit-adjustments">
+          <label>
+            Zoom
+            <input type="range" id="editZoom" min="1" max="2.5" step="0.01" value="1">
+          </label>
+
+          <label>
+            Horizontal
+            <input type="range" id="editPosX" min="-100" max="100" step="1" value="0">
+          </label>
+
+          <label>
+            Vertical
+            <input type="range" id="editPosY" min="-100" max="100" step="1" value="0">
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cancelEdit" type="button">Cancelar</button>
+        <button id="saveEdit" type="button">Salvar</button>
+      </div>
     </div>
   </div>
-</div>
-  
 </body>
 </html>
