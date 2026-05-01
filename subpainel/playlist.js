@@ -4,56 +4,56 @@ const folders = {
     status: "Ativa",
     code: "H4D3",
     vehicles: "38",
-    zone: "7,4 kmÂ²",
+    zone: "7,4 km2",
   },
   Pituba: {
     district: "Pituba",
     status: "Ativa",
     code: "J3J2",
     vehicles: "42",
-    zone: "10,8 kmÂ²",
+    zone: "10,8 km2",
   },
   "Rio Vermelho": {
     district: "Rio Vermelho",
     status: "Ativa",
     code: "J1N3",
     vehicles: "24",
-    zone: "5,1 kmÂ²",
+    zone: "5,1 km2",
   },
   Itapua: {
     district: "Itapua",
     status: "Inativo",
     code: "M3D8",
     vehicles: "16",
-    zone: "12,6 kmÂ²",
+    zone: "12,6 km2",
   },
   Ondina: {
     district: "Ondina",
     status: "Ativa",
     code: "A7B2",
     vehicles: "28",
-    zone: "4,9 kmÂ²",
+    zone: "4,9 km2",
   },
   Imbui: {
     district: "Imbui",
     status: "Ativa",
     code: "C8L5",
     vehicles: "31",
-    zone: "9,2 kmÂ²",
+    zone: "9,2 km2",
   },
   "Caminho das Arvores": {
     district: "Caminho das Arvores",
     status: "Ativa",
     code: "P9K4",
     vehicles: "35",
-    zone: "6,3 kmÂ²",
+    zone: "6,3 km2",
   },
   Comercio: {
     district: "Comercio",
     status: "Inativo",
     code: "S2V6",
     vehicles: "12",
-    zone: "3,8 kmÂ²",
+    zone: "3,8 km2",
   },
 };
 
@@ -68,7 +68,6 @@ const backToFolders = document.querySelector("#backToFolders");
 const generalButton = document.querySelector("#generalButton");
 const createFolderButton = document.querySelector("#createFolderButton");
 const deletePageButton = document.querySelector("#deletePageButton");
-const openedFolderStatus = document.querySelector("#openedFolderStatus");
 const playlistHeader = document.querySelector("#playlistHeader");
 
 function copyCode(button) {
@@ -99,8 +98,6 @@ document.querySelectorAll(".open-folder").forEach((button) => {
     detailCode.dataset.code = data.code;
     detailVehicles.textContent = data.vehicles;
     openedFolderLabel.textContent = `Pasta aberta: ${data.district}`;
-    openedFolderStatus.textContent = data.code;
-    openedFolderStatus.dataset.code = data.code;
 
     generalButton.classList.add("is-hidden");
     createFolderButton.classList.add("is-hidden");
