@@ -1,77 +1,10 @@
-const folders = {
-  Barra: {
-    district: "Barra",
-    status: "Ativa",
-    code: "H4D3",
-    vehicles: "38",
-    zone: "7,4 km2",
-    campaigns: "12",
-    quizzes: "1.248",
-  },
-  Pituba: {
-    district: "Pituba",
-    status: "Ativa",
-    code: "J3J2",
-    vehicles: "42",
-    zone: "10,8 km2",
-    campaigns: "9",
-    quizzes: "1.086",
-  },
-  "Rio Vermelho": {
-    district: "Rio Vermelho",
-    status: "Ativa",
-    code: "J1N3",
-    vehicles: "24",
-    zone: "5,1 km2",
-    campaigns: "7",
-    quizzes: "742",
-  },
-  Itapua: {
-    district: "Itapua",
-    status: "Inativo",
-    code: "M3D8",
-    vehicles: "16",
-    zone: "12,6 km2",
-    campaigns: "3",
-    quizzes: "328",
-  },
-  Ondina: {
-    district: "Ondina",
-    status: "Ativa",
-    code: "A7B2",
-    vehicles: "28",
-    zone: "4,9 km2",
-    campaigns: "6",
-    quizzes: "684",
-  },
-  Imbui: {
-    district: "Imbui",
-    status: "Ativa",
-    code: "C8L5",
-    vehicles: "31",
-    zone: "9,2 km2",
-    campaigns: "8",
-    quizzes: "913",
-  },
-  "Caminho das Arvores": {
-    district: "Caminho das Arvores",
-    status: "Ativa",
-    code: "P9K4",
-    vehicles: "35",
-    zone: "6,3 km2",
-    campaigns: "10",
-    quizzes: "1.102",
-  },
-  Comercio: {
-    district: "Comercio",
-    status: "Inativo",
-    code: "S2V6",
-    vehicles: "12",
-    zone: "3,8 km2",
-    campaigns: "2",
-    quizzes: "190",
-  },
-};
+const SUPABASE_URL = "https://phuerrdaioaoylukhqml.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_u5dGbUm03WG2056mW2ySNQ_xltzBtU4";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let veiculos = [];
+let pastaAberta = null;
 
 const detailTitle = document.querySelector("#detailTitle");
 const detailDistrict = document.querySelector("#detailDistrict");
@@ -79,6 +12,7 @@ const detailCode = document.querySelector("#detailCode");
 const detailVehicles = document.querySelector("#detailVehicles");
 const detailCampaigns = document.querySelector("#detailCampaigns");
 const detailQuizzes = document.querySelector("#detailQuizzes");
+
 const folderPage = document.querySelector("#folderPage");
 const folderGrid = document.querySelector("#folderGrid");
 const openedFolderLabel = document.querySelector("#openedFolderLabel");
@@ -87,10 +21,99 @@ const generalButton = document.querySelector("#generalButton");
 const createFolderButton = document.querySelector("#createFolderButton");
 const playlistHeader = document.querySelector("#playlistHeader");
 
+const playlistList = document.querySelector("#playlistList");
+
+document.addEventListener("DOMContentLoaded", iniciarPagina);
+
+async function iniciarPagina() {
+  await carregarVeiculos();
+}
+
+async function carregarVeiculos() {
+  const { data, error } = await supabaseClient
+    .from("veiculos")
+    .select("*")
+    .order("nome", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao carregar veículos:", error);
+    return;
+  }
+
+  veiculos = data || [];
+  renderizarPastas();
+}
+
+function renderizarPastas() {
+  if (!folderGrid) return;
+
+  folderGrid.innerHTML = "";
+
+  veiculos.forEach((item) => {
+    const statusTexto = item.status === "inativo" ? "Inativo" : "Ativo";
+    const statusClasse = item.status === "inativo" ? "inativo" : "ativo";
+
+    const card = document.createElement("article");
+    card.className = "folder-card";
+
+    card.innerHTML = `
+      <div class="folder-status ${statusClasse}">
+        <span></span>
+        ${statusTexto}
+      </div>
+
+      <button class="copy-code" data-code="${item.codigo}">
+        ${item.codigo}
+      </button>
+
+      <div class="folder-image">
+        ${
+          item.imagem_url
+            ? `<img src="${item.imagem_url}" alt="${item.nome}">`
+            : ""
+        }
+      </div>
+
+      <h2>${item.nome}</h2>
+
+      <div class="folder-info">
+        <div>
+          <span>VEÍCULOS</span>
+          <strong>${item.veiculos_vinculados || 0}</strong>
+        </div>
+
+        <div>
+          <span>ZONA</span>
+          <strong>${formatarArea(item.zona_area)}</strong>
+        </div>
+      </div>
+
+      <button class="open-folder" data-code="${item.codigo}">
+        Abrir pagina
+      </button>
+    `;
+
+    folderGrid.appendChild(card);
+  });
+
+  ativarEventosDosCards();
+}
+
+function ativarEventosDosCards() {
+  document.querySelectorAll(".copy-code").forEach((button) => {
+    button.addEventListener("click", () => copyCode(button));
+  });
+
+  document.querySelectorAll(".open-folder").forEach((button) => {
+    button.addEventListener("click", () => abrirPasta(button.dataset.code));
+  });
+}
+
 function copyCode(button) {
   const code = button.dataset.code;
 
   navigator.clipboard?.writeText(code);
+
   button.classList.add("copied");
   button.textContent = "Copiado";
 
@@ -100,42 +123,158 @@ function copyCode(button) {
   }, 1200);
 }
 
-document.querySelectorAll(".copy-code").forEach((button) => {
-  button.addEventListener("click", () => copyCode(button));
-});
+async function abrirPasta(codigo) {
+  const data = veiculos.find((item) => item.codigo === codigo);
+  if (!data) return;
 
-document.querySelectorAll(".open-folder").forEach((button) => {
-  button.addEventListener("click", () => {
-    const data = folders[button.dataset.folder];
-    if (!data) return;
+  pastaAberta = data;
 
-    detailTitle.textContent = "BAIRRO DA CIDADE";
-    detailDistrict.textContent = data.zone;
-    detailCode.textContent = data.code;
-    detailCode.dataset.code = data.code;
-    detailVehicles.textContent = data.vehicles;
-    detailCampaigns.textContent = data.campaigns;
-    detailQuizzes.textContent = data.quizzes;
-    openedFolderLabel.textContent = `Pasta aberta: ${data.district}`;
+  detailTitle.textContent = "BAIRRO DA CIDADE";
+  detailDistrict.textContent = formatarArea(data.zona_area);
+  detailCode.textContent = data.codigo;
+  detailCode.dataset.code = data.codigo;
+  detailVehicles.textContent = data.veiculos_vinculados || 0;
+  detailCampaigns.textContent = data.campanhas_ativas || 0;
+  detailQuizzes.textContent = formatarNumero(data.quiz_interacao || 0);
 
-    generalButton.classList.add("is-hidden");
-    createFolderButton.classList.add("is-hidden");
-    folderHeaderBackButton.classList.remove("is-hidden");
-    playlistHeader.classList.add("is-folder-context");
-    folderGrid.classList.add("is-hidden");
-    folderPage.classList.remove("is-hidden");
-    folderPage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  openedFolderLabel.textContent = `Pasta aberta: ${data.nome}`;
+
+  generalButton.classList.add("is-hidden");
+  createFolderButton.classList.add("is-hidden");
+  folderHeaderBackButton.classList.remove("is-hidden");
+  playlistHeader.classList.add("is-folder-context");
+  folderGrid.classList.add("is-hidden");
+  folderPage.classList.remove("is-hidden");
+
+  await carregarPlaylist(data.codigo);
+
+  folderPage.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
   });
-});
+}
+
+async function carregarPlaylist(codigo) {
+  if (!playlistList) return;
+
+  playlistList.innerHTML = `
+    <div class="playlist-empty">Carregando playlist...</div>
+  `;
+
+  const { data, error } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("*")
+    .eq("codigo", codigo)
+    .order("ordem", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao carregar playlist:", error);
+    playlistList.innerHTML = `
+      <div class="playlist-empty">Erro ao carregar playlist.</div>
+    `;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    playlistList.innerHTML = `
+      <div class="playlist-empty">Nenhuma mídia adicionada ainda.</div>
+    `;
+    return;
+  }
+
+  playlistList.innerHTML = "";
+
+  data.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "playlist-item";
+
+    row.innerHTML = `
+      <button class="drag-button" type="button">⠿</button>
+
+      <strong>${index + 1}.</strong>
+
+      <span class="playlist-name">
+        ${item.nome_arquivo || item.nome || item.link_url || "Mídia sem nome"}
+      </span>
+
+      <span class="playlist-type">
+        ${item.tipo || "video"}
+      </span>
+
+      <div class="playlist-actions">
+        <button type="button" onclick="abrirMidia('${item.id}')">↗</button>
+        <button type="button" onclick="editarMidia('${item.id}')">✎</button>
+        <button type="button" onclick="excluirMidia('${item.id}')">⌫</button>
+      </div>
+    `;
+
+    playlistList.appendChild(row);
+  });
+}
 
 function closeFolderPage() {
+  pastaAberta = null;
+
   folderPage.classList.add("is-hidden");
   folderGrid.classList.remove("is-hidden");
   generalButton.classList.remove("is-hidden");
   createFolderButton.classList.remove("is-hidden");
   folderHeaderBackButton.classList.add("is-hidden");
   playlistHeader.classList.remove("is-folder-context");
-  folderGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  folderGrid.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
 }
 
-folderHeaderBackButton.addEventListener("click", closeFolderPage);
+folderHeaderBackButton?.addEventListener("click", closeFolderPage);
+
+async function abrirMidia(id) {
+  const { data, error } = await supabaseClient
+    .from("playlist_veiculos")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) return;
+
+  const url = data.arquivo_url || data.video_url || data.link_url;
+
+  if (url) {
+    window.open(url, "_blank");
+  }
+}
+
+async function editarMidia(id) {
+  alert("Função de editar mídia será conectada no próximo passo.");
+}
+
+async function excluirMidia(id) {
+  const confirmar = confirm("Deseja excluir esta mídia da playlist?");
+  if (!confirmar) return;
+
+  const { error } = await supabaseClient
+    .from("playlist_veiculos")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Erro ao excluir mídia:", error);
+    alert("Erro ao excluir mídia.");
+    return;
+  }
+
+  if (pastaAberta) {
+    await carregarPlaylist(pastaAberta.codigo);
+  }
+}
+
+function formatarArea(valor) {
+  if (!valor) return "0 km2";
+  return `${String(valor).replace(".", ",")} km2`;
+}
+
+function formatarNumero(valor) {
+  return Number(valor).toLocaleString("pt-BR");
+}
