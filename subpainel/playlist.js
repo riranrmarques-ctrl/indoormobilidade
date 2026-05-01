@@ -523,28 +523,26 @@ async function salvarEdicaoPasta() {
   const codigoAtual = pastaAberta.codigo;
 
   const { error } = await supabaseClient
-    .from("veiculos")
-    .update({
-      nome: novoNome,
-      zona_area: novaZona,
-      imagem_url,
-      imagem_path,
-      mapa_url: imagem_url,
-      mapa_path: imagem_path,
-      atualizado_em: new Date().toISOString(),
-    })
-    .eq("codigo", codigoAtual);
+  .from("veiculos")
+  .update({
+    nome: novoNome,
+    zona_area: novaZona,
+    imagem_url,
+    imagem_path,
+    atualizado_em: new Date().toISOString(),
+  })
+  .eq("codigo", codigoAtual);
 
-  if (error) {
-    console.error("Erro ao salvar edição:", error);
-    alert("Erro ao salvar edição.");
-    return;
-  }
+if (error) {
+  console.error("Erro ao salvar edição:", error);
+  alert("Erro ao salvar edição.");
+  return;
+}
 
-  fecharModalEdicao();
+fecharModalEdicao();
 
-  await carregarVeiculos();
-  await abrirPasta(codigoAtual);
+await carregarVeiculos();
+await abrirPasta(codigoAtual);
 }
 
 async function excluirPasta() {
