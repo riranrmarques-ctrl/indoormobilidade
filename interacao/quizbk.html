@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promoção BK</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 199, 44, 0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(214, 35, 0, 0.25), transparent 34%),
+    linear-gradient(135deg, #170500, #5b1200 55%, #1b0700);
+  color: white;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* TOPO - BARRA TEMPO */
+.time-area {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(620px, 72vw);
+}
+
+.time-text {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  opacity: 0.78;
+  margin-bottom: 6px;
+}
+
+.time-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+  overflow: hidden;
+}
+
+.time-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff7a00);
+  transition: width 1s linear;
+}
+
+/* LAYOUT */
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 70px 40px 40px;
+}
+
+.content {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo {
+  width: 250px;
+  max-height: 130px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.badge {
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(255,204,0,0.16);
+  border: 1px solid rgba(255,204,0,0.42);
+  color: #ffdb4d;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: 54px;
+  line-height: 1.05;
+  margin: 0 0 14px;
+  letter-spacing: -1px;
+}
+
+.sub {
+  font-size: 20px;
+  line-height: 1.4;
+  opacity: 0.86;
+  margin: 0 0 34px;
+  max-width: 620px;
+}
+
+/* BOTÕES */
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.btn {
+  min-height: 85px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.11);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #ffcc00, #ff7a00);
+  color: #2b0a00;
+  transform: translateY(-2px);
+}
+
+/* RESULTADO */
+.result-card {
+  margin-top: 10px;
+  padding: 30px;
+  border-radius: 32px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.13);
+  box-shadow: 0 25px 65px rgba(0,0,0,0.30);
+}
+
+.qr-box {
+  background: white;
+  padding: 22px;
+  border-radius: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#qrcode canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.result-note {
+  margin-top: 14px;
+  font-size: 15px;
+  opacity: 0.72;
+}
+
+/* TELAS */
+#quiz2, #resultado {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BARRA TEMPO -->
+<div class="time-area">
+  <div class="time-text">Tempo para resgatar sua promoção</div>
+  <div class="time-bar">
+    <div id="timeFill" class="time-fill"></div>
+  </div>
+</div>
+
+<!-- QUIZ 1 -->
+<div id="quiz1" class="screen">
+  <div class="content">
+
+    <img class="logo" src="bk.png">
+
+    <div class="badge">Promoção exclusiva no tablet</div>
+
+    <h1>Ganhe uma oferta especial do BK</h1>
+    <p class="sub">Responda rápido e desbloqueie uma promoção para aproveitar agora.</p>
+
+    <div class="buttons">
+      <button class="btn" onclick="next()">🍔 Hambúrgueres</button>
+      <button class="btn" onclick="next()">🍟 Combos</button>
+      <button class="btn" onclick="next()">🥤 Bebidas</button>
+      <button class="btn" onclick="next()">🍦 Sobremesas</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- QUIZ 2 -->
+<div id="quiz2" class="screen">
+  <div class="content">
+
+    <img class="logo" src="bk.png">
+
+    <div class="badge">Quase liberado</div>
+
+    <h1>Escolha sua vantagem</h1>
+    <p class="sub">Finalize para liberar sua promoção exclusiva do Burger King.</p>
+
+    <div class="buttons">
+      <button class="btn" onclick="finalizar()">🔥 Resgatar promoção</button>
+      <button class="btn" onclick="finalizar()">🎁 Ver ofertas do dia</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<div id="resultado" class="screen">
+  <div class="content">
+
+    <img class="logo" src="bk.png">
+
+    <div class="badge">Promoção desbloqueada</div>
+
+    <h1>Escaneie e aproveite</h1>
+    <p class="sub">Use a câmera do celular para acessar sua oferta BK agora.</p>
+
+    <div class="result-card">
+      <div class="qr-box">
+        <div id="qrcode"></div>
+      </div>
+
+      <div class="result-note">
+        A tela será reiniciada automaticamente ao final do tempo.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+let total = 30;
+let restante = total;
+let barra = document.getElementById("timeFill");
+
+function atualizarBarra() {
+  barra.style.width = (restante / total * 100) + "%";
+}
+
+setInterval(() => {
+  restante--;
+  atualizarBarra();
+
+  if (restante <= 0) {
+    location.reload();
+  }
+}, 1000);
+
+function next() {
+  document.getElementById("quiz1").style.display = "none";
+  document.getElementById("quiz2").style.display = "flex";
+}
+
+function finalizar() {
+  document.getElementById("quiz2").style.display = "none";
+  document.getElementById("resultado").style.display = "flex";
+
+  document.getElementById("qrcode").innerHTML = "";
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://www.burgerking.com.br/",
+    width: 260,
+    height: 260
+  });
+}
+
+atualizarBarra();
+</script>
+
+</body>
+</html>
