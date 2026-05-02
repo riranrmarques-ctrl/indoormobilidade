@@ -762,3 +762,12 @@ dd {
     padding: 10px;
   }
 }
+
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
