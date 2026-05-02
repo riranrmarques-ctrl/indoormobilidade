@@ -240,6 +240,7 @@ async function carregarPlaylist(codigo) {
   data.forEach((item, index) => {
     const row = document.createElement("div");
     row.className = "file-row";
+    row.dataset.id = item.id;
 
     row.innerHTML = `
       <span class="drag-handle">::</span>
@@ -273,6 +274,8 @@ async function carregarPlaylist(codigo) {
     });
   });
 }
+
+ativarMoverPlaylist();
 
 async function criarPasta() {
   const nome = prompt("Nome da nova pasta:");
@@ -813,3 +816,38 @@ function gerarCodigoPasta() {
 window.abrirMidia = abrirMidia;
 window.editarMidia = editarMidia;
 window.excluirMidia = excluirMidia;
+
+function ativarMoverPlaylist() {
+  if (!playlistList || typeof Sortable === "undefined") return;
+
+  new Sortable(playlistList, {
+    animation: 180,
+    handle: ".drag-handle",
+    ghostClass: "dragging-row",
+
+    onEnd: async function () {
+      await salvarNovaOrdemPlaylist();
+    }
+  });
+}
+
+async function salvarNovaOrdemPlaylist() {
+  if (!pastaAberta) return;
+
+  const linhas = [...playlistList.querySelectorAll(".file-row")];
+
+  for (let index = 0; index < linhas.length; index++) {
+    const id = linhas[index].dataset.id;
+    const novaOrdem = index + 1;
+
+    await supabaseClient
+      .from("playlist_veiculos")
+      .update({
+        ordem: novaOrdem,
+        atualizado_em: new Date().toISOString()
+      })
+      .eq("id", id);
+  }
+
+  await carregarPlaylist(pastaAberta.codigo);
+}
