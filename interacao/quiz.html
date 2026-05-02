@@ -24,79 +24,75 @@ body {
 .main {
   width: 100%;
   height: 100vh;
-  display: flex;
 }
 
 .screen {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 42px 58px;
-  gap: 50px;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
 }
 
 .left {
-  width: 48%;
+  width: 100%;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.right {
-  width: 52%;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
+  text-align: center;
 }
 
 .logo {
-  width: 240px;
-  max-height: 120px;
+  width: 280px;
+  max-height: 130px;
   object-fit: contain;
   margin-bottom: 28px;
 }
 
 .badge {
   display: inline-block;
-  width: fit-content;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 999px;
   background: rgba(255, 204, 0, 0.14);
   border: 1px solid rgba(255, 204, 0, 0.35);
   color: #ffdb4d;
-  font-size: 15px;
-  margin-bottom: 18px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 22px;
 }
 
 h1 {
-  font-size: 50px;
+  font-size: 56px;
   line-height: 1.05;
   margin: 0 0 18px;
   letter-spacing: -1px;
 }
 
 .sub {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.4;
   opacity: 0.82;
-  margin: 0 0 34px;
-  max-width: 520px;
+  margin: 0 0 36px;
+  max-width: 650px;
 }
 
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 18px;
+  width: 100%;
   max-width: 620px;
 }
 
 .btn {
-  min-height: 86px;
-  padding: 18px;
-  border-radius: 22px;
+  min-height: 88px;
+  padding: 20px;
+  border-radius: 24px;
   border: 1px solid rgba(255,255,255,0.16);
-  font-size: 18px;
+  font-size: 19px;
   font-weight: bold;
   background: rgba(255,255,255,0.11);
   color: white;
@@ -112,66 +108,17 @@ h1 {
   color: #111827;
 }
 
-.hero-card {
-  width: 100%;
-  max-width: 560px;
-  min-height: 430px;
-  border-radius: 38px;
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
-  border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 35px 80px rgba(0,0,0,0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-card::before {
-  content: "";
-  position: absolute;
-  width: 330px;
-  height: 330px;
-  border-radius: 50%;
-  background: rgba(255,204,0,0.18);
-  filter: blur(20px);
-  top: -90px;
-  right: -90px;
-}
-
-.hero-card img {
-  width: 72%;
-  max-height: 260px;
-  object-fit: contain;
-  position: relative;
-  z-index: 2;
-}
-
-.discount {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  background: #ffcc00;
-  color: #111827;
-  padding: 18px 24px;
-  border-radius: 22px;
-  font-weight: bold;
-  font-size: 22px;
-  z-index: 3;
-  box-shadow: 0 18px 35px rgba(0,0,0,0.28);
-}
-
 .qr-box {
   background: white;
   padding: 24px;
   border-radius: 28px;
+  margin-top: 28px;
   box-shadow: 0 28px 60px rgba(0,0,0,0.35);
 }
 
 .timer {
-  font-size: 42px;
-  margin-top: 18px;
+  font-size: 46px;
+  margin-top: 20px;
   font-weight: bold;
   color: #ffcc00;
 }
@@ -189,32 +136,30 @@ h1 {
 
 @media (max-width: 900px) {
   .screen {
-    padding: 30px;
-    gap: 28px;
-  }
-
-  h1 {
-    font-size: 38px;
-  }
-
-  .sub {
-    font-size: 17px;
-  }
-
-  .buttons {
-    grid-template-columns: 1fr;
-  }
-
-  .btn {
-    min-height: 64px;
+    padding: 28px;
   }
 
   .logo {
-    width: 190px;
+    width: 230px;
+    margin-bottom: 22px;
   }
 
-  .hero-card {
-    min-height: 330px;
+  h1 {
+    font-size: 42px;
+  }
+
+  .sub {
+    font-size: 18px;
+    margin-bottom: 28px;
+  }
+
+  .buttons {
+    max-width: 560px;
+  }
+
+  .btn {
+    min-height: 72px;
+    font-size: 17px;
   }
 }
 </style>
@@ -226,8 +171,8 @@ h1 {
 
   <!-- QUIZ 1 -->
   <div id="quiz1" class="screen">
-
     <div class="left">
+
       <img class="logo" src="atakarejo.png">
 
       <div class="badge">Oferta rápida no tablet</div>
@@ -241,21 +186,14 @@ h1 {
         <button class="btn" onclick="next()">🧼 Produtos para casa</button>
         <button class="btn" onclick="next()">🥤 Bebidas e lazer</button>
       </div>
-    </div>
 
-    <div class="right">
-      <div class="hero-card">
-        <img src="atakarejo.png">
-        <div class="discount">Ganhe desconto agora</div>
-      </div>
     </div>
-
   </div>
 
   <!-- QUIZ 2 -->
   <div id="quiz2" class="screen">
-
     <div class="left">
+
       <img class="logo" src="atakarejo.png">
 
       <div class="badge">Quase lá</div>
@@ -267,21 +205,14 @@ h1 {
         <button class="btn" onclick="finalizar()">💸 Pagar mais barato</button>
         <button class="btn" onclick="finalizar()">🎁 Ver ofertas especiais</button>
       </div>
-    </div>
 
-    <div class="right">
-      <div class="hero-card">
-        <img src="atakarejo.png">
-        <div class="discount">Oferta liberada</div>
-      </div>
     </div>
-
   </div>
 
   <!-- RESULTADO -->
   <div id="resultado" class="screen">
-
     <div class="left">
+
       <img class="logo" src="atakarejo.png">
 
       <div class="badge">Oferta desbloqueada</div>
@@ -291,14 +222,12 @@ h1 {
 
       <div id="timer" class="timer">⏳ 30s</div>
       <div class="small">A tela será reiniciada automaticamente.</div>
-    </div>
 
-    <div class="right">
       <div class="qr-box">
         <div id="qrcode"></div>
       </div>
-    </div>
 
+    </div>
   </div>
 
 </div>
