@@ -14,7 +14,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(255,204,0,0.18), transparent 30%),
+    radial-gradient(circle at top left, rgba(255,204,0,0.20), transparent 32%),
     linear-gradient(135deg, #020617, #071a44 55%, #06112d);
   color: white;
   height: 100vh;
@@ -24,6 +24,41 @@ body {
 .main {
   width: 100%;
   height: 100vh;
+  position: relative;
+}
+
+.time-area {
+  position: fixed;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(620px, 72vw);
+  z-index: 50;
+}
+
+.time-text {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 8px;
+}
+
+.time-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.time-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff8a00);
+  border-radius: 999px;
+  transition: width 1s linear;
 }
 
 .screen {
@@ -32,15 +67,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  padding: 70px 40px 40px;
 }
 
-.left {
+.content {
   width: 100%;
-  max-width: 760px;
+  max-width: 780px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
 }
@@ -49,12 +83,12 @@ body {
   width: 280px;
   max-height: 130px;
   object-fit: contain;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .badge {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: 999px;
   background: rgba(255, 204, 0, 0.14);
   border: 1px solid rgba(255, 204, 0, 0.35);
@@ -67,7 +101,7 @@ body {
 h1 {
   font-size: 56px;
   line-height: 1.05;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   letter-spacing: -1px;
 }
 
@@ -75,8 +109,8 @@ h1 {
   font-size: 22px;
   line-height: 1.4;
   opacity: 0.82;
-  margin: 0 0 36px;
-  max-width: 650px;
+  margin: 0 0 34px;
+  max-width: 680px;
 }
 
 .buttons {
@@ -108,25 +142,26 @@ h1 {
   color: #111827;
 }
 
+.result-card {
+  margin-top: 8px;
+  padding: 28px;
+  border-radius: 34px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 28px 70px rgba(0,0,0,0.30);
+}
+
 .qr-box {
   background: white;
   padding: 24px;
   border-radius: 28px;
-  margin-top: 28px;
-  box-shadow: 0 28px 60px rgba(0,0,0,0.35);
+  box-shadow: 0 22px 50px rgba(0,0,0,0.35);
 }
 
-.timer {
-  font-size: 46px;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #ffcc00;
-}
-
-.small {
-  font-size: 16px;
-  opacity: 0.65;
-  margin-top: 12px;
+.result-note {
+  margin-top: 18px;
+  font-size: 17px;
+  color: rgba(255,255,255,0.72);
 }
 
 #quiz2,
@@ -135,13 +170,8 @@ h1 {
 }
 
 @media (max-width: 900px) {
-  .screen {
-    padding: 28px;
-  }
-
   .logo {
     width: 230px;
-    margin-bottom: 22px;
   }
 
   h1 {
@@ -150,11 +180,6 @@ h1 {
 
   .sub {
     font-size: 18px;
-    margin-bottom: 28px;
-  }
-
-  .buttons {
-    max-width: 560px;
   }
 
   .btn {
@@ -169,9 +194,16 @@ h1 {
 
 <div class="main">
 
+  <div class="time-area">
+    <div class="time-text">Tempo para desbloquear a oferta</div>
+    <div class="time-bar">
+      <div id="timeFill" class="time-fill"></div>
+    </div>
+  </div>
+
   <!-- QUIZ 1 -->
   <div id="quiz1" class="screen">
-    <div class="left">
+    <div class="content">
 
       <img class="logo" src="atakarejo.png">
 
@@ -192,7 +224,7 @@ h1 {
 
   <!-- QUIZ 2 -->
   <div id="quiz2" class="screen">
-    <div class="left">
+    <div class="content">
 
       <img class="logo" src="atakarejo.png">
 
@@ -211,20 +243,20 @@ h1 {
 
   <!-- RESULTADO -->
   <div id="resultado" class="screen">
-    <div class="left">
+    <div class="content">
 
       <img class="logo" src="atakarejo.png">
 
       <div class="badge">Oferta desbloqueada</div>
 
-      <h1>Escaneie o QR Code</h1>
-      <p class="sub">Aproveite sua vantagem antes que o tempo acabe.</p>
+      <h1>Escaneie e aproveite</h1>
+      <p class="sub">Aponte a câmera do celular para o QR Code e veja sua vantagem.</p>
 
-      <div id="timer" class="timer">⏳ 30s</div>
-      <div class="small">A tela será reiniciada automaticamente.</div>
-
-      <div class="qr-box">
-        <div id="qrcode"></div>
+      <div class="result-card">
+        <div class="qr-box">
+          <div id="qrcode"></div>
+        </div>
+        <div class="result-note">A tela reinicia automaticamente quando a barra terminar.</div>
       </div>
 
     </div>
@@ -235,6 +267,27 @@ h1 {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
+let tempoTotal = 30;
+let tempoRestante = tempoTotal;
+let qrGerado = false;
+
+const barra = document.getElementById("timeFill");
+
+function atualizarBarra() {
+  const porcentagem = (tempoRestante / tempoTotal) * 100;
+  barra.style.width = porcentagem + "%";
+}
+
+const intervaloTempo = setInterval(() => {
+  tempoRestante--;
+  atualizarBarra();
+
+  if (tempoRestante <= 0) {
+    clearInterval(intervaloTempo);
+    location.reload();
+  }
+}, 1000);
+
 function next() {
   document.getElementById("quiz1").style.display = "none";
   document.getElementById("quiz2").style.display = "flex";
@@ -244,31 +297,20 @@ function finalizar() {
   document.getElementById("quiz2").style.display = "none";
   document.getElementById("resultado").style.display = "flex";
 
-  document.getElementById("qrcode").innerHTML = "";
+  if (!qrGerado) {
+    document.getElementById("qrcode").innerHTML = "";
 
-  new QRCode(document.getElementById("qrcode"), {
-    text: "https://www.atakarejo.com.br/",
-    width: 280,
-    height: 280
-  });
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://www.atakarejo.com.br/",
+      width: 280,
+      height: 280
+    });
 
-  iniciarTimer();
+    qrGerado = true;
+  }
 }
 
-function iniciarTimer() {
-  let tempo = 30;
-  const el = document.getElementById("timer");
-
-  const intervalo = setInterval(() => {
-    tempo--;
-    el.innerHTML = "⏳ " + tempo + "s";
-
-    if (tempo <= 0) {
-      clearInterval(intervalo);
-      location.reload();
-    }
-  }, 1000);
-}
+atualizarBarra();
 </script>
 
 </body>
